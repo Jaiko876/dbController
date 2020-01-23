@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dao.RoleDAO;
-import com.example.demo.pojo.RoleDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.dao.iDao.IRoleDao;
+import com.example.demo.dto.RoleDTO;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Kirill Mikheev
@@ -13,14 +13,31 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/")
 public class TestController {
 
-    @Autowired
-    RoleDAO roleDAO;
+    private final IRoleDao IRoleDao;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getrole")
-    public RoleDTO get(int id) {
-        return roleDAO.getRoleById(id);
+    public TestController(IRoleDao IRoleDao) {
+        this.IRoleDao = IRoleDao;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/roles")
+    public List<RoleDTO> getRoles() {
+        return IRoleDao.getRoles();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/roles/{id}")
+    public RoleDTO get(@PathVariable int id) {
+        return IRoleDao.getRoleById(id);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/roles")
+    public boolean post(@RequestBody RoleDTO roleDTO) {
+        return IRoleDao.insertRole(roleDTO);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/roles/{id}")
+    public boolean delete(@PathVariable int id) {
+        return IRoleDao.deleteRoleById(id);
     }
 }
