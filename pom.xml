@@ -89,7 +89,7 @@
                 <configuration>
                     <jdbc>
                         <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://localhost:5432/demo</url>
+                        <url>jdbc:postgresql://localhost:5433/demo</url>
                         <user>postgres</user>
                         <password>1234</password>
                     </jdbc>
@@ -98,7 +98,7 @@
                             <name>org.jooq.meta.postgres.PostgresDatabase</name>
                             <includes>.*</includes>
                             <excludes>flyway_schema_history</excludes>
-                            <inputSchema>topicsdb</inputSchema>
+                            <inputSchema>public</inputSchema>
                             <includeTables>true</includeTables>
                         </database>
                         <generate>
