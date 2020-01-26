@@ -65,10 +65,48 @@
             <artifactId>jooq</artifactId>
             <version>3.12.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+            <!--      Генерация REST API-->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>4.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <inputSpec>${project.basedir}/src/main/resources/openapi/api.yaml</inputSpec>
+                    <generatorName>spring</generatorName>
+                    <apiPackage>ru.quick.approval.system.api.controller</apiPackage>
+                    <modelPackage>ru.quick.approval.system.api.model</modelPackage>
+                    <generateApiTests>false</generateApiTests>
+                    <generateModelTests>false</generateModelTests>
+                    <configOptions>
+                        <sourceFolder>api</sourceFolder>
+                        <dateLibrary>java8</dateLibrary>
+                        <interfaceOnly>true</interfaceOnly>
+                    </configOptions>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -90,15 +128,15 @@
                     <jdbc>
                         <driver>org.postgresql.Driver</driver>
                         <url>jdbc:postgresql://localhost:5433/demo</url>
-                        <user>postgres</user>
-                        <password>1234</password>
+                        <user>docker</user>
+                        <password>admin</password>
                     </jdbc>
                     <generator>
                         <database>
                             <name>org.jooq.meta.postgres.PostgresDatabase</name>
                             <includes>.*</includes>
                             <excludes>flyway_schema_history</excludes>
-                            <inputSchema>public</inputSchema>
+                            <inputSchema>qas</inputSchema>
                             <includeTables>true</includeTables>
                         </database>
                         <generate>
