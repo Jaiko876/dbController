@@ -4,7 +4,7 @@ info:
   title: API Quick Approval System
   description: Api для взаимодействия с базой данных
   contact:
-    name: Kirill
+    name: Kirill & Igor
 tags:
   - name: user
     description: запросы блока user
@@ -17,8 +17,8 @@ tags:
   - name: process_stage
     description: запросы блока process_stage
   - name: process_type
-    description: запросы блока process_type 
-servers: 
+    description: запросы блока process_type
+servers:
   - url: localhost:8080/api/v1
 paths:
   /user:
@@ -69,10 +69,10 @@ paths:
         - user
       description: данные по пользователю
       operationId: getUserById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id пользователя, которого нужно получить 
+          description: id пользователя, которого нужно получить
           required: true
           schema:
             type: integer
@@ -123,10 +123,10 @@ paths:
         - user
       description: список всех ролей пользователя
       operationId: getRoleListOfUserById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id пользователя, список ролей которого нужно получить 
+          description: id пользователя, список ролей которого нужно получить
           required: true
           schema:
             type: integer
@@ -145,17 +145,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    
+
   /user/{id}/task:
     get:
       tags:
         - user
       description: список всех задач пользователя
       operationId: getTaskListOfUserById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id пользователя, список задач которого нужно получить 
+          description: id пользователя, список задач которого нужно получить
           required: true
           schema:
             type: integer
@@ -180,10 +180,10 @@ paths:
         - user
       description: список задач пользователя со статусами {active; sended}
       operationId: getActiveTaskListOfUserById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id пользователя, список задач которого нужно получить 
+          description: id пользователя, список задач которого нужно получить
           required: true
           schema:
             type: integer
@@ -208,10 +208,10 @@ paths:
         - user
       description: список задач пользователя со статусом {wait}
       operationId: getWaitTaskListOfUserById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id пользователя, список задач которого нужно получить 
+          description: id пользователя, список задач которого нужно получить
           required: true
           schema:
             type: integer
@@ -236,10 +236,10 @@ paths:
         - user
       description: список задач пользователя со статусами {agreed, denied}
       operationId: getCmpleteTaskListOfUserById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id пользователя, список задач которого нужно получить 
+          description: id пользователя, список задач которого нужно получить
           required: true
           schema:
             type: integer
@@ -277,13 +277,13 @@ paths:
                 password:
                   type: string
                   format: password
-      responses: 
+      responses:
         '200':
-            description: user response
-            content:
-              application/json:
-                schema:
-                 $ref: '#/components/schemas/UserWithoutPassword'
+          description: user response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithoutPassword'
         default:
           description: unexpected error
           content:
@@ -296,9 +296,9 @@ paths:
         - user
       description: выход пользователя из системы
       operationId: logout
-      responses: 
+      responses:
         '200':
-            description: user response
+          description: user response
         default:
           description: unexpected error
           content:
@@ -382,10 +382,10 @@ paths:
         - role
       description: данные по роли
       operationId: getRoleById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id роли, которую нужно получить 
+          description: id роли, которую нужно получить
           required: true
           schema:
             type: integer
@@ -478,10 +478,10 @@ paths:
         - process_type
       description: данные по типу процесса
       operationId: getProcessTypeById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id типа процесса, который нужно получить 
+          description: id типа процесса, который нужно получить
           required: true
           schema:
             type: integer
@@ -519,7 +519,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /stage/type/{id}: 
+  /stage/type/{id}:
     post:
       tags:
         - process_stage
@@ -528,7 +528,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: id типа процсса, к которому нужно добавить этап 
+          description: id типа процесса, к которому нужно добавить этап
           required: true
           schema:
             type: integer
@@ -554,10 +554,10 @@ paths:
         - process_stage
       description: данные по этапу процесса
       operationId: getProcessStageById
-      parameters: 
+      parameters:
         - name: id
           in: path
-          description: id этапа процесса, который нужно получить 
+          description: id этапа процесса, который нужно получить
           required: true
           schema:
             type: integer
@@ -574,11 +574,504 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /process:
+    get:
+      tags:
+        - process
+      description: получить все процессы
+      operationId: getAllProcess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Process'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/{id}:
+    get:
+      tags:
+        - process
+      description: получить процесс по id
+      operationId: getProcessById
+      parameters:
+        - name: id
+          in: path
+          description: id процесса, который нужно получить
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Process'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - process
+      description: изменить процесс по выбранному id
+      operationId: updateProcessById
+      parameters:
+        - name: id
+          in: path
+          description: id процесса, который нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для процесса
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Process'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /process/{id}/task:
+    get:
+      tags:
+        - process
+      description: получить список задач по id процесса
+      operationId: getAllTasksByThisId
+      parameters:
+        - name: id
+          in: path
+          description: id процесса, который нужно получить
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/{id}/status:
+    get:
+      tags:
+        - process
+      description: получить статус процесса по id процесса
+      operationId: getProcessStatus
+      parameters:
+        - name: id
+          in: path
+          description: id процесса, который нужно получить
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status_Type'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/{id}/user/{userId}/task:
+    post:
+      tags:
+        - process
+      description: создать задачу по процессу с исполнителем user
+      operationId: createProcessTaskByUserId
+      parameters:
+        - name: id
+          in: path
+          description: id процесса
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: id пользователя
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новая задача по процессу с исполнителем user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/{id}/role/{roleId}/task:
+    post:
+      tags:
+        - process
+      description: создать задачу по процессу, назначенную на коллектив role
+      operationId: createProcessTaskByRoleId
+      parameters:
+        - name: id
+          in: path
+          description: id процесса
+          required: true
+          schema:
+            type: integer
+        - name: roleId
+          in: path
+          description: id группы
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новая задача по процессу назначенная на коллектив role
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/process_type/{id}:
+    post:
+      tags:
+        - process
+      description: создать новый процесс по выбранному типу
+      operationId: createProcessByProcessType
+      parameters:
+        - name: id
+          in: path
+          description: id типа процесса
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новый процесс по выбранному типу
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Process'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/status/active:
+    get:
+      tags:
+        - process
+      description: получить список активных процессов
+      operationId: getAllActiveProcess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Process'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /process/status/complete:
+    get:
+      tags:
+        - process
+      description: получить список завершенных процессов
+      operationId: getAllCompleteProcess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Process'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task:
+    get:
+      tags:
+        - task
+      description: получить список задач
+      operationId: getAllTask
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{id}:
+    get:
+      tags:
+        - task
+      description: получить задачу по id
+      operationId: getTaskById
+      parameters:
+        - name: id
+          in: path
+          description: id задачи
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - task
+      description: обновить данные по задаче
+      operationId: updateTaskById
+      parameters:
+        - name: id
+          in: path
+          description: id задачи, которую нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для задачи
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{id}/status/sended:
+    patch:
+      tags:
+        - task
+      description: обновить статус задачи на отправлено
+      operationId: updateTaskByIdSended
+      parameters:
+        - name: id
+          in: path
+          description: id задачи, которую нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для задачи
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{id}/status/agreed:
+    patch:
+      tags:
+        - task
+      description: обновить статус задачи на согласовано
+      operationId: updateTaskByIdAgreed
+      parameters:
+        - name: id
+          in: path
+          description: id задачи, которую нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для задачи
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{id}/status/active:
+    patch:
+      tags:
+        - task
+      description: обновить статус задачи на активна
+      operationId: updateTaskByIdActive
+      parameters:
+        - name: id
+          in: path
+          description: id задачи, которую нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для задачи
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{id}/status/denied:
+    patch:
+      tags:
+        - task
+      description: обновить статус задачи на отказано в согласовании
+      operationId: updateTaskByIdDenied
+      parameters:
+        - name: id
+          in: path
+          description: id задачи, которую нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для задачи
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{id}/status/canceled:
+    patch:
+      tags:
+        - task
+      description: обновить статус задачи на отменена
+      operationId: updateTaskByIdCanceled
+      parameters:
+        - name: id
+          in: path
+          description: id задачи, которую нужно изменить
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: новые данные для задачи
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
+
     User:
       type: object
-      required: 
+      required:
         - id_user
         - fio
         - login
@@ -598,9 +1091,10 @@ components:
           type: string
         telegram_chat_id:
           type: integer
+
     UserWithoutPassword:
       type: object
-      required: 
+      required:
         - id_user
         - fio
         - login
@@ -617,6 +1111,7 @@ components:
           type: string
         telegram_chat_id:
           type: integer
+
     Role:
       type: object
       required:
@@ -625,8 +1120,9 @@ components:
       properties:
         id_role:
           type: integer
-        name: 
+        name:
           type: string
+
     Task:
       type: object
       required:
@@ -644,7 +1140,7 @@ components:
         process_id:
           type: integer
         user_performer_id:
-          type: integer 
+          type: integer
         role_performer_id:
           type: integer
         date_start:
@@ -655,6 +1151,7 @@ components:
           $ref: '#/components/schemas/Timestamp'
         status_id:
           type: integer
+
     Process_Type:
       type: object
       required:
@@ -671,6 +1168,7 @@ components:
           type: string
         time_to_do:
           type: integer
+
     Process_Stage:
       type: object
       required:
@@ -687,6 +1185,7 @@ components:
           type: integer
         role_id:
           type: integer
+
     Status_Type:
       type: string
       enum:
@@ -696,9 +1195,42 @@ components:
         - agreed
         - denied
         - canceled
+
+    Process:
+      type: object
+      required:
+        - id_process
+        - process_type_id
+        - name
+        - description
+        - user_start_id
+        - date_start
+        - date_end_planning
+        - date_end_fact
+        - status_id
+      properties:
+        id_process:
+          type: integer
+        process_type_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        user_start_id:
+          type: integer
+        date_start:
+          $ref: '#/components/schemas/Timestamp'
+        date_end_planning:
+          $ref: '#/components/schemas/Timestamp'
+        date_end_fact:
+          $ref: '#/components/schemas/Timestamp'
+        status_id:
+          type: integer
+
     Timestamp:
       type: object
-      required: 
+      required:
         - date
         - day
         - hours
@@ -712,7 +1244,7 @@ components:
         date:
           type: integer
           format: int32
-        day: 
+        day:
           type: integer
           format: int32
         hours:
@@ -736,6 +1268,7 @@ components:
         year:
           type: integer
           format: int32
+
     Error:
       type: object
       required:
