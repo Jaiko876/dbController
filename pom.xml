@@ -128,7 +128,7 @@
                     <jdbc>
                         <driver>org.postgresql.Driver</driver>
                         <url>jdbc:postgresql://localhost:5433/demo</url>
-                        <user>postgres</user>
+                        <user>docker</user>
                         <password>admin</password>
                     </jdbc>
                     <generator>
@@ -136,7 +136,7 @@
                             <name>org.jooq.meta.postgres.PostgresDatabase</name>
                             <includes>.*</includes>
                             <excludes>flyway_schema_history</excludes>
-                            <inputSchema>public</inputSchema>
+                            <inputSchema>qas</inputSchema>
                             <includeTables>true</includeTables>
                         </database>
                         <generate>
