@@ -1,0 +1,9 @@
+PostgreSQL:
+  restart: always
+  image: postgres:latest
+  ports:
+    - "5432:5433"
+  environment:
+    - DB_USER=postgres
+    - DB_PASS=admin
+    - DB_NAME=demo

@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package ru.quick.approval.system.dbcontroller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
