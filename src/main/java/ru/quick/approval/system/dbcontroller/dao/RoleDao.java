@@ -11,6 +11,9 @@ import ru.quick.approval.system.dbcontroller.dao.iDao.IRoleDao;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.jooq.demo.db.tables.RoleQas.ROLE_QAS;
+
+
 /**
  * DAO-класс для работы с таблицей role_qas
  * @author Kirill Mikheev
@@ -35,7 +38,7 @@ public class RoleDao implements IRoleDao {
     @Override
     public List<RoleQasRecord> getAllRoles() {
         List<RoleQasRecord> answer = new ArrayList<>();
-        Result<RoleQasRecord> result = dslContext.selectFrom(RoleQas.ROLE_QAS).fetch();
+        Result<RoleQasRecord> result = dslContext.selectFrom(ROLE_QAS).fetch();
         for (RoleQasRecord record : result){
             answer.add(record);
         }
@@ -49,7 +52,7 @@ public class RoleDao implements IRoleDao {
      */
     @Override
     public RoleQasRecord getRoleById(int id) {
-        return dslContext.selectFrom(RoleQas.ROLE_QAS).where(RoleQas.ROLE_QAS.ID_ROLE.eq(id)).fetchAny();
+        return dslContext.selectFrom(ROLE_QAS).where(ROLE_QAS.ID_ROLE.eq(id)).fetchAny();
     }
 
     /**
@@ -60,7 +63,7 @@ public class RoleDao implements IRoleDao {
      */
     @Override
     public boolean updateRoleById(int id, RoleQasRecord newRole) {
-        int response = dslContext.update(RoleQas.ROLE_QAS).set(newRole).where(RoleQas.ROLE_QAS.ID_ROLE.eq(id)).execute();
+        int response = dslContext.update(ROLE_QAS).set(ROLE_QAS.NAME ,newRole.getName()).where(ROLE_QAS.ID_ROLE.eq(id)).execute();
         return response == 0;
     }
 
@@ -71,7 +74,7 @@ public class RoleDao implements IRoleDao {
      */
     @Override
     public boolean addRole(RoleQasRecord newRole) {
-        int response = dslContext.insertInto(RoleQas.ROLE_QAS).set(newRole).execute();
+        int response = dslContext.insertInto(ROLE_QAS, ROLE_QAS.NAME).values(newRole.getName()).execute();
         return response == 0;
     }
 }

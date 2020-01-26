@@ -10,6 +10,9 @@ import ru.quick.approval.system.dbcontroller.dao.iDao.IUserDao;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.jooq.demo.db.tables.UserQas.USER_QAS;
+
+
 /**
  * DAO-класс для работы с таблицей user_qas
  * @author Kirill Mikheev
@@ -33,7 +36,7 @@ public class UserDao implements IUserDao {
     @Override
     public List<UserQasRecord> getAllUsers() {
         List<UserQasRecord> answer = new ArrayList<>();
-        Result<UserQasRecord> result = dslContext.selectFrom(UserQas.USER_QAS).fetch();
+        Result<UserQasRecord> result = dslContext.selectFrom(USER_QAS).fetch();
         for (UserQasRecord record : result){
             answer.add(record);
         }
@@ -47,7 +50,7 @@ public class UserDao implements IUserDao {
      */
     @Override
     public UserQasRecord getUserById(int id) {
-        return dslContext.selectFrom(UserQas.USER_QAS).where(UserQas.USER_QAS.ID_USER.eq(id)).fetchAny();
+        return dslContext.selectFrom(USER_QAS).where(USER_QAS.ID_USER.eq(id)).fetchAny();
     }
 
     /**
@@ -58,7 +61,13 @@ public class UserDao implements IUserDao {
      */
     @Override
     public boolean updateUserById(int id, UserQasRecord newUser) {
-        int response = dslContext.update(UserQas.USER_QAS).set(newUser).where(UserQas.USER_QAS.ID_USER.eq(id)).execute();
+        int response = dslContext.update(USER_QAS).
+                set(USER_QAS.FIO, newUser.getFio()).
+                set(USER_QAS.LOGIN, newUser.getFio()).
+                set(USER_QAS.PASSWORD, newUser.getPassword()).
+                set(USER_QAS.EMAIL, newUser.getEmail()).
+                set(USER_QAS.TELEGRAM_CHAT_ID, newUser.getTelegramChatId()).
+                where(USER_QAS.ID_USER.eq(id)).execute();
         return response == 0;
     }
 
@@ -69,7 +78,8 @@ public class UserDao implements IUserDao {
      */
     @Override
     public boolean addUser(UserQasRecord newUser) {
-        int response = dslContext.insertInto(UserQas.USER_QAS).set(newUser).execute();
+        int response = dslContext.insertInto(USER_QAS, USER_QAS.FIO, USER_QAS.LOGIN, USER_QAS.PASSWORD, USER_QAS.EMAIL, USER_QAS.TELEGRAM_CHAT_ID)
+                .values(newUser.getFio(), newUser.getLogin(), newUser.getPassword(), newUser.getEmail(), newUser.getTelegramChatId()).execute();
         return response == 0;
     }
 }

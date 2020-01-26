@@ -4,6 +4,7 @@ import org.jooq.demo.db.tables.records.UserQasRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.Role;
+import ru.quick.approval.system.api.model.User;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IRoleDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IUserDao;
@@ -50,9 +51,22 @@ public class UserService implements IUserService {
         return answer;
     }
 
+    /**
+     * Добавляет нового пользователя
+     * @param newUser
+     * @return true, если все прошло успешно, иначе false
+     */
     @Override
-    public boolean addUser(UserWithoutPassword newUser) {
-        return false;
+    public boolean addUser(User newUser) {
+        UserQasRecord record = new UserQasRecord(
+                newUser.getIdUser(),
+                newUser.getFio(),
+                newUser.getLogin(),
+                newUser.getPassword(),
+                newUser.getEmail(),
+                newUser.getTelegramChatId()
+        );
+        return userDao.addUser(record);
     }
 
     @Override
@@ -84,7 +98,7 @@ public class UserService implements IUserService {
      * @return true, если все прошло успешно, иначе false
      */
     @Override
-    public boolean updateUserById(int id, UserWithoutPassword user) {
+    public boolean updateUserById(int id, User user) {
         return false;
     }
 }
