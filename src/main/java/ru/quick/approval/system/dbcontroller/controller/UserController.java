@@ -28,13 +28,19 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<User> addRoleToUserById(Integer id, @Valid Role role) {
+    public ResponseEntity<Void> addRoleToUserById(Integer id, @Valid Role role) {
         return null;
     }
 
     @Override
-    public ResponseEntity<User> addUser(@Valid User user) {
-        return null;
+    public ResponseEntity<Void> addUser(@Valid User user) {
+        ResponseEntity<Void> responseEntity;
+        if(userService.addUser(user)){
+            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+        }else {
+            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        return responseEntity;
     }
 
     @Override
@@ -73,17 +79,17 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<User> login(@Valid InlineObject inlineObject) {
+    public ResponseEntity<UserWithoutPassword> login(@Valid InlineObject inlineObject) {
         return null;
     }
 
     @Override
-    public ResponseEntity<User> logout() {
+    public ResponseEntity<Void> logout() {
         return null;
     }
 
     @Override
-    public ResponseEntity<UserWithoutPassword> updateUser(Integer id, @Valid UserWithoutPassword userWithoutPassword) {
+    public ResponseEntity<Void> updateUser(Integer id, @Valid User user) {
         return null;
     }
 }

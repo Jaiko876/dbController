@@ -24,7 +24,7 @@ public class RoleController implements RoleApi, RoleidApi {
     }
 
     @Override
-    public ResponseEntity<Role> addRole(@Valid Role role) {
+    public ResponseEntity<Void> addRole(@Valid Role role) {
         return null;
     }
 
