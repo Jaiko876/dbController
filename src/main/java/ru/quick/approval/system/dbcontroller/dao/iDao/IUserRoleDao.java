@@ -16,7 +16,7 @@ public interface IUserRoleDao {
 
     UserRoleRecord getUserRoleById(int id);
 
-    boolean updateUserRoleById(int id, UserRoleRecord newUerRole);
+    boolean updateUserRoleById(int id, UserRoleRecord newUserRole);
 
     boolean addUserRole(UserRoleRecord newUserRole);
 

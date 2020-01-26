@@ -2,7 +2,6 @@ package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
 import org.jooq.Result;
-import org.jooq.demo.db.tables.RoleQas;
 import org.jooq.demo.db.tables.records.RoleQasRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
