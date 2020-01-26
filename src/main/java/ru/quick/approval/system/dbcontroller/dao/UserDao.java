@@ -68,7 +68,7 @@ public class UserDao implements IUserDao {
                 set(USER_QAS.EMAIL, newUser.getEmail()).
                 set(USER_QAS.TELEGRAM_CHAT_ID, newUser.getTelegramChatId()).
                 where(USER_QAS.ID_USER.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -80,6 +80,6 @@ public class UserDao implements IUserDao {
     public boolean addUser(UserQasRecord newUser) {
         int response = dslContext.insertInto(USER_QAS, USER_QAS.FIO, USER_QAS.LOGIN, USER_QAS.PASSWORD, USER_QAS.EMAIL, USER_QAS.TELEGRAM_CHAT_ID)
                 .values(newUser.getFio(), newUser.getLogin(), newUser.getPassword(), newUser.getEmail(), newUser.getTelegramChatId()).execute();
-        return response == 0;
+        return response != 0;
     }
 }

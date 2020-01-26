@@ -63,7 +63,7 @@ public class StatusDao implements IStatusDao {
     @Override
     public boolean updateStatusById(int id, StatusRecord newStatus) {
         int response = dslContext.update(STATUS).set(STATUS.NAME ,newStatus.getName()).where(STATUS.ID_STATUS.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -74,6 +74,6 @@ public class StatusDao implements IStatusDao {
     @Override
     public boolean addStatus(StatusRecord newStatus) {
         int response = dslContext.insertInto(STATUS, STATUS.NAME).values(newStatus.getName()).execute();
-        return response == 0;
+        return response != 0;
     }
 }

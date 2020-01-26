@@ -72,7 +72,7 @@ public class ProcessDao implements IProcessDao {
                 set(PROCESS.DATE_END_FACT, newProcess.getDateEndFact()).
                 set(PROCESS.STATUS_ID, newProcess.getStatusId()).
                 where(PROCESS.ID_PROCESS.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -89,6 +89,6 @@ public class ProcessDao implements IProcessDao {
                 newProcess.getUserStartId(), newProcess.getDateStart(), newProcess.getDateEndPlanning(),
                 newProcess.getDateEndFact(), newProcess.getStatusId())
                 .execute();
-        return response == 0;
+        return response != 0;
     }
 }

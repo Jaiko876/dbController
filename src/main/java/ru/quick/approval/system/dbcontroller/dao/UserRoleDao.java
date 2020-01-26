@@ -66,7 +66,7 @@ public class UserRoleDao implements IUserRoleDao {
                 set(USER_ROLE.USER_ID, newUserRole.getUserId()).
                 set(USER_ROLE.ROLE_ID, newUserRole.getRoleId()).
                 where(USER_ROLE.USER_ROLE_ID.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -78,6 +78,6 @@ public class UserRoleDao implements IUserRoleDao {
     public boolean addUserRole(UserRoleRecord newUserRole) {
         int response = dslContext.insertInto(USER_ROLE, USER_ROLE.USER_ID, USER_ROLE.ROLE_ID).
                 values(newUserRole.getUserId(), newUserRole.getRoleId()).execute();
-        return response == 0;
+        return response != 0;
     }
 }

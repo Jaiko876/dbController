@@ -63,7 +63,7 @@ public class RoleDao implements IRoleDao {
     @Override
     public boolean updateRoleById(int id, RoleQasRecord newRole) {
         int response = dslContext.update(ROLE_QAS).set(ROLE_QAS.NAME ,newRole.getName()).where(ROLE_QAS.ID_ROLE.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -74,6 +74,6 @@ public class RoleDao implements IRoleDao {
     @Override
     public boolean addRole(RoleQasRecord newRole) {
         int response = dslContext.insertInto(ROLE_QAS, ROLE_QAS.NAME).values(newRole.getName()).execute();
-        return response == 0;
+        return response != 0;
     }
 }

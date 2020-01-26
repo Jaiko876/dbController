@@ -67,7 +67,7 @@ public class ProcessTypeDao implements IProcessTypeDao {
                 set(PROCESS_TYPE.DESCRIPTION, newProcessType.getDescription()).
                 set(PROCESS_TYPE.TIME_TO_DO, newProcessType.getTimeToDo()).
                 where(PROCESS_TYPE.ID_PROCESS_TYPE.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -81,6 +81,6 @@ public class ProcessTypeDao implements IProcessTypeDao {
                 PROCESS_TYPE, PROCESS_TYPE.NAME, PROCESS_TYPE.DESCRIPTION, PROCESS_TYPE.TIME_TO_DO)
                 .values(newProcessType.getName(), newProcessType.getDescription(), newProcessType.getTimeToDo())
                 .execute();
-        return response == 0;
+        return response != 0;
     }
 }

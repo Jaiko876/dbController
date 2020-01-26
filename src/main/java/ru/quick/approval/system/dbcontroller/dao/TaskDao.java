@@ -71,7 +71,7 @@ public class TaskDao implements ITaskDao {
                 set(TASK.DATE_END_FACT, newTask.getDateEndFact()).
                 set(TASK.STATUS_ID, newTask.getStatusId()).
                 where(TASK.ID_TASK.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -88,6 +88,6 @@ public class TaskDao implements ITaskDao {
                         newTask.getDateStart(), newTask.getDateEndPlanning(),
                         newTask.getDateEndFact(), newTask.getStatusId())
                 .execute();
-        return response == 0;
+        return response != 0;
     }
 }

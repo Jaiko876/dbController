@@ -36,9 +36,9 @@ public class UserController implements UserApi {
     public ResponseEntity<Void> addUser(@Valid User user) {
         ResponseEntity<Void> responseEntity;
         if(userService.addUser(user)){
-            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
-        }else {
             responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }else {
+            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return responseEntity;
     }

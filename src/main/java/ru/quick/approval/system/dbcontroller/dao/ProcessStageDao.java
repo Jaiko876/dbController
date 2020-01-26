@@ -67,7 +67,7 @@ public class ProcessStageDao implements IProcessStageDao {
                 set(PROCESS_STAGE.STAGE, newProcessStage.getStage()).
                 set(PROCESS_STAGE.ROLE_ID, newProcessStage.getRoleId()).
                 where(PROCESS_STAGE.ID_PROCESS_STAGE.eq(id)).execute();
-        return response == 0;
+        return response != 0;
     }
 
     /**
@@ -81,6 +81,6 @@ public class ProcessStageDao implements IProcessStageDao {
                 PROCESS_STAGE, PROCESS_STAGE.PROCESS_TYPE_ID, PROCESS_STAGE.STAGE, PROCESS_STAGE.ROLE_ID)
                 .values(newProcessStage.getProcessTypeId(), newProcessStage.getStage(), newProcessStage.getRoleId())
                 .execute();
-        return response == 0;
+        return response != 0;
     }
 }
