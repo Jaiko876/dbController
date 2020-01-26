@@ -59,7 +59,7 @@ public class UserDao implements IUserDao {
     @Override
     public boolean updateUserById(int id, UserQasRecord newUser) {
         int response = dslContext.update(UserQas.USER_QAS).set(newUser).where(UserQas.USER_QAS.ID_USER.eq(id)).execute();
-        return response == 0 ? true : false;
+        return response == 0;
     }
 
     /**
@@ -70,6 +70,6 @@ public class UserDao implements IUserDao {
     @Override
     public boolean addUser(UserQasRecord newUser) {
         int response = dslContext.insertInto(UserQas.USER_QAS).set(newUser).execute();
-        return response == 0 ? true : false;
+        return response == 0;
     }
 }

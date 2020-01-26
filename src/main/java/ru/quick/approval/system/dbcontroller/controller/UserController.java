@@ -68,8 +68,8 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<User> getUserById(Integer id) {
-        return null;
+    public ResponseEntity<UserWithoutPassword> getUserById(Integer id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.ACCEPTED);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<User> updateUser(Integer id, @Valid User user) {
+    public ResponseEntity<UserWithoutPassword> updateUser(Integer id, @Valid UserWithoutPassword userWithoutPassword) {
         return null;
     }
 }

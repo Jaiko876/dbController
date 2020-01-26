@@ -3,9 +3,10 @@ package ru.quick.approval.system.dbcontroller.service;
 import org.jooq.demo.db.tables.records.UserQasRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.quick.approval.system.api.model.Role;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
+import ru.quick.approval.system.dbcontroller.dao.iDao.IRoleDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IUserDao;
-import ru.quick.approval.system.dbcontroller.dto.UserDto;
 import ru.quick.approval.system.dbcontroller.service.iservice.IUserService;
 
 import java.util.ArrayList;
@@ -20,13 +21,19 @@ import java.util.List;
 @Service
 public class UserService implements IUserService {
 
-    private IUserDao userDao;
+    private final IUserDao userDao;
+    private final IRoleDao roleDao;
 
     @Autowired
-    public UserService(IUserDao userDao){
+    public UserService(IUserDao userDao, IRoleDao roleDao){
         this.userDao = userDao;
+        this.roleDao = roleDao;
     }
 
+    /**
+     * Возвращает список всех пользователей
+     * @return List<UserWithoutPassword>
+     */
     @Override
     public List<UserWithoutPassword> allUsers() {
         List<UserQasRecord> records = userDao.getAllUsers();
@@ -41,5 +48,43 @@ public class UserService implements IUserService {
             answer.add(member);
         }
         return answer;
+    }
+
+    @Override
+    public boolean addUser(UserWithoutPassword newUser) {
+        return false;
+    }
+
+    @Override
+    public boolean addRoleToUserById(int id, Role role) {
+        return false;
+    }
+
+    /**
+     * Возвращает пользователя с заданным id
+     * @param id
+     * @return UserWithoutPassword
+     */
+    @Override
+    public UserWithoutPassword getUserById(int id) {
+        UserQasRecord record = userDao.getUserById(id);
+        UserWithoutPassword answer = new UserWithoutPassword();
+        answer.setIdUser(record.getIdUser());
+        answer.setFio(record.getFio());
+        answer.setEmail(record.getEmail());
+        answer.setLogin(record.getLogin());
+        answer.setTelegramChatId(record.getTelegramChatId());
+        return answer;
+    }
+
+    /**
+     * Обновление данных пользователя по его id
+     * @param id
+     * @param user объект с новыми данными
+     * @return true, если все прошло успешно, иначе false
+     */
+    @Override
+    public boolean updateUserById(int id, UserWithoutPassword user) {
+        return false;
     }
 }

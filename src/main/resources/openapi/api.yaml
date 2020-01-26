@@ -57,10 +57,6 @@ paths:
       responses:
         '200':
           description: user response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         default:
           description: unexpected error
           content:
@@ -86,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserWithoutPassword'
         default:
           description: unexpected error
           content:
@@ -115,10 +111,6 @@ paths:
       responses:
         '200':
           description: user response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         default:
           description: unexpected error
           content:
@@ -291,7 +283,7 @@ paths:
             content:
               application/json:
                 schema:
-                 $ref: '#/components/schemas/User'
+                 $ref: '#/components/schemas/UserWithoutPassword'
         default:
           description: unexpected error
           content:
@@ -307,10 +299,6 @@ paths:
       responses: 
         '200':
             description: user response
-            content:
-              application/json:
-                schema:
-                 $ref: '#/components/schemas/User'
         default:
           description: unexpected error
           content:
@@ -340,10 +328,6 @@ paths:
       responses:
         '200':
           description: role response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         default:
           description: unexpected error
           content:
@@ -386,10 +370,6 @@ paths:
       responses:
         '200':
           description: role response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Role'
         default:
           description: unexpected error
           content:
@@ -486,10 +466,6 @@ paths:
       responses:
         '200':
           description: process type response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Process_Type'
         default:
           description: unexpected error
           content:
@@ -566,10 +542,6 @@ paths:
       responses:
         '200':
           description: process stage response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Process_Stage'
         default:
           description: unexpected error
           content:
