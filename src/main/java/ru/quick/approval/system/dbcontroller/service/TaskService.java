@@ -35,7 +35,7 @@ public class TaskService implements ITaskService {
      * @return - возвращает Pojo
      */
 
-    private Task toPojo(TaskRecord taskRecord) {
+    static Task toPojo(TaskRecord taskRecord) {
         Task task = new Task();
         task.setIdTask(taskRecord.component1());
         task.setProcessId(taskRecord.component2());
@@ -54,7 +54,7 @@ public class TaskService implements ITaskService {
      * @return - возвращает Record
      */
 
-    private TaskRecord toTaskRecord(Task task) {
+    static TaskRecord toTaskRecord(Task task) {
         TaskRecord taskRecord = new TaskRecord();
         taskRecord.setIdTask(task.getIdTask());
         taskRecord.setProcessId(task.getProcessId());

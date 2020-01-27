@@ -55,6 +55,16 @@ public class TaskDao implements ITaskDao {
     }
 
     /**
+     * Возвращает все задачи, привязанные к процессу
+     * @param process_id - id процесса
+     * @return - List<TaskRecord>
+     */
+    @Override
+    public List<TaskRecord> getAllTasksByProcessId(int process_id) {
+        return dslContext.selectFrom(TASK).where(TASK.PROCESS_ID.eq(process_id)).fetch();
+    }
+
+    /**
      * Обновляет данные задачи с заданным id
      * @param id
      * @param newTask объект, хранящий новые данные

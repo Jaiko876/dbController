@@ -16,6 +16,8 @@ public interface IProcessDao {
 
     ProcessRecord getProcessById(int id);
 
+    List<ProcessRecord> getProcessByStatusId(int status_id);
+
     boolean updateProcessById(int id, ProcessRecord newProcess);
 
     boolean addProcess(ProcessRecord newProcess);
