@@ -16,6 +16,8 @@ public interface IStatusDao {
 
     StatusRecord getStatusById(int id);
 
+    StatusRecord getStatusByName(String name);
+
     boolean updateStatusById(int id, StatusRecord newStatus);
 
     boolean addStatus(StatusRecord newStatus);

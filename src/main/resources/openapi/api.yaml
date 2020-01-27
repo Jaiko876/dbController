@@ -933,13 +933,6 @@ paths:
           required: true
           schema:
             type: integer
-      requestBody:
-        description: новые данные для задачи
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
       responses:
         '200':
           description: OK
@@ -962,13 +955,6 @@ paths:
           required: true
           schema:
             type: integer
-      requestBody:
-        description: новые данные для задачи
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
       responses:
         '200':
           description: OK
@@ -991,13 +977,6 @@ paths:
           required: true
           schema:
             type: integer
-      requestBody:
-        description: новые данные для задачи
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
       responses:
         '200':
           description: OK
@@ -1020,13 +999,6 @@ paths:
           required: true
           schema:
             type: integer
-      requestBody:
-        description: новые данные для задачи
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
       responses:
         '200':
           description: OK
@@ -1049,13 +1021,6 @@ paths:
           required: true
           schema:
             type: integer
-      requestBody:
-        description: новые данные для задачи
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
       responses:
         '200':
           description: OK

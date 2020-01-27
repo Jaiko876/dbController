@@ -55,11 +55,23 @@ public class StatusDao implements IStatusDao {
     }
 
     /**
+     * Возвращает статус по названию
+     * @param name - название статуса
+     * @return - StatusRecord
+     */
+    @Override
+    public StatusRecord getStatusByName(String name) {
+        return dslContext.selectFrom(STATUS).where(STATUS.NAME.equalIgnoreCase(name)).fetchAny();
+    }
+
+    /**
      * Обновляет данные статуса по заданному id
      * @param id
      * @param newStatus объект, соержащий новые данные
      * @return true, если все прошло успешно, иначе false
      */
+
+
     @Override
     public boolean updateStatusById(int id, StatusRecord newStatus) {
         int response = dslContext.update(STATUS).set(STATUS.NAME ,newStatus.getName()).where(STATUS.ID_STATUS.eq(id)).execute();
