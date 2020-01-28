@@ -141,4 +141,27 @@ public class Interpreters {
         );
         return userQasRecord;
     }
+
+    @SuppressWarnings("Duplicates")
+    public static User userQasRecordToUser(UserQasRecord userQasRecord){
+        User user = new User();
+        user.setIdUser(userQasRecord.getIdUser());
+        user.setFio(userQasRecord.getFio());
+        user.setLogin(userQasRecord.getLogin());
+        user.setPassword(userQasRecord.getPassword());
+        user.setEmail(userQasRecord.getEmail());
+        user.setTelegramChatId(userQasRecord.getTelegramChatId());
+        return user;
+    }
+
+    @SuppressWarnings("Duplicates")
+    public static UserWithoutPassword userQasRecordToUserWithoutPassword(UserQasRecord userQasRecord){
+        UserWithoutPassword user = new UserWithoutPassword();
+        user.setIdUser(userQasRecord.getIdUser());
+        user.setFio(userQasRecord.getFio());
+        user.setLogin(userQasRecord.getLogin());
+        user.setEmail(userQasRecord.getEmail());
+        user.setTelegramChatId(userQasRecord.getTelegramChatId());
+        return user;
+    }
 }
