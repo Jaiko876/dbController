@@ -220,7 +220,8 @@ public class UserService implements IUserService {
 
     @Override
     public boolean login(InlineObject authData) {
-        return false;
+        UserQasRecord userQasRecord = userDao.getUserByLogin(authData.getLogin());
+        return userQasRecord.getPassword() == authData.getPassword();
     }
 
     @Override
