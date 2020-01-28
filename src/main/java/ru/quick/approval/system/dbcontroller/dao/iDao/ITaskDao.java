@@ -16,6 +16,8 @@ public interface ITaskDao {
 
     TaskRecord getTaskById(int id);
 
+    List<TaskRecord> getAllTasksByProcessId(int process_id);
+
     boolean updateTaskById(int id, TaskRecord newTask);
 
     boolean addTask(TaskRecord newTask);

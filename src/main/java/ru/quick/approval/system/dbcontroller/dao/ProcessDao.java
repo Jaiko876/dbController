@@ -55,11 +55,23 @@ public class ProcessDao implements IProcessDao {
     }
 
     /**
+     * Возвращает все процессы со статусом status_id
+     * @param status_id - id статуса
+     * @return - List<ProcessRecord>
+     */
+    @Override
+    public List<ProcessRecord> getProcessByStatusId(int status_id) {
+        return dslContext.selectFrom(PROCESS).where(PROCESS.STATUS_ID.eq(status_id)).fetch();
+    }
+
+    /**
      * Обновляет данные для процесса по его id
      * @param id
      * @param newProcess объект с новыми данными для процесса
      * @return true, если все прошло успешно, иначе false
      */
+
+
     @Override
     public boolean updateProcessById(int id, ProcessRecord newProcess) {
         int response = dslContext.update(PROCESS).
