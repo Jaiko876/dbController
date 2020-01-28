@@ -235,7 +235,7 @@ paths:
       tags:
         - user
       description: список задач пользователя со статусами {agreed, denied}
-      operationId: getCmpleteTaskListOfUserById
+      operationId: getCompleteTaskListOfUserById
       parameters:
         - name: id
           in: path

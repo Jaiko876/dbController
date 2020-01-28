@@ -1,8 +1,7 @@
 package ru.quick.approval.system.dbcontroller.service.iservice;
 
-import ru.quick.approval.system.api.model.Role;
-import ru.quick.approval.system.api.model.User;
-import ru.quick.approval.system.api.model.UserWithoutPassword;
+import ru.quick.approval.system.api.model.*;
+
 import java.util.List;
 
 /**
@@ -23,4 +22,17 @@ public interface IUserService {
 
     boolean updateUserById(int id, User user);
 
+    List<Task> getActiveTaskListOfUserById(int id);
+
+    List<Task> getCompleteTaskListOfUserById(int id);
+
+    List<Task> getWaitTaskListOfUserById(int id);
+
+    List<Task> getTaskListOfUserById(Integer id);
+
+    List<Role> getRoleListOfUserById(Integer id);
+
+    boolean login(InlineObject authData);
+
+    boolean logout();
 }

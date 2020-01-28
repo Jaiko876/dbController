@@ -42,4 +42,6 @@ public class RoleController implements RoleApi, RoleidApi {
     public ResponseEntity<Role> getRoleById(Integer id) {
         return null;
     }
+
+
 }

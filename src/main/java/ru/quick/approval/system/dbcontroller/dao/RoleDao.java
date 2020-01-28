@@ -55,6 +55,16 @@ public class RoleDao implements IRoleDao {
     }
 
     /**
+     * Возвращает роль с заданным именем
+     * @param name
+     * @return RoleQasRecord
+     */
+    @Override
+    public RoleQasRecord getRoleByName(String name) {
+        return dslContext.selectFrom(ROLE_QAS).where(ROLE_QAS.NAME.eq(name)).fetchAny();
+    }
+
+    /**
      * Обновляет данные для роли по ее id
      * @param id
      * @param newRole объект записи пользователя с новыми данными
@@ -76,4 +86,6 @@ public class RoleDao implements IRoleDao {
         int response = dslContext.insertInto(ROLE_QAS, ROLE_QAS.NAME).values(newRole.getName()).execute();
         return response != 0;
     }
+
+
 }

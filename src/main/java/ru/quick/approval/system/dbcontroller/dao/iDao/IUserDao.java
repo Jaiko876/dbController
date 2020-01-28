@@ -16,6 +16,8 @@ public interface IUserDao {
 
     UserQasRecord getUserById(int id);
 
+    UserQasRecord getUserByLogin(String login);
+
     boolean updateUserById(int id, UserQasRecord newUser);
 
     boolean addUser(UserQasRecord newUser);

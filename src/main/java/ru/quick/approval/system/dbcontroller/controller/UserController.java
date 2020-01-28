@@ -29,7 +29,13 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<Void> addRoleToUserById(Integer id, @Valid Role role) {
-        return null;
+        ResponseEntity<Void> responseEntity;
+        if(userService.addRoleToUserById(id, role)){
+            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }else{
+            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return responseEntity;
     }
 
     @Override
@@ -50,32 +56,39 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<List<Task>> getActiveTaskListOfUserById(Integer id) {
-        return null;
+        return new ResponseEntity<>(userService.getActiveTaskListOfUserById(id), HttpStatus.ACCEPTED);
     }
 
     @Override
-    public ResponseEntity<List<Task>> getCmpleteTaskListOfUserById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<Role>> getRoleListOfUserById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<Task>> getTaskListOfUserById(Integer id) {
-        return null;
+    public ResponseEntity<List<Task>> getCompleteTaskListOfUserById(Integer id) {
+        return new ResponseEntity<>(userService.getCompleteTaskListOfUserById(id), HttpStatus.ACCEPTED);
     }
 
     @Override
     public ResponseEntity<List<Task>> getWaitTaskListOfUserById(Integer id) {
-        return null;
+        return new ResponseEntity<>(userService.getWaitTaskListOfUserById(id), HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<List<Role>> getRoleListOfUserById(Integer id) {
+        return new ResponseEntity<>(userService.getRoleListOfUserById(id), HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<List<Task>> getTaskListOfUserById(Integer id) {
+        return new ResponseEntity<>(userService.getTaskListOfUserById(id), HttpStatus.ACCEPTED);
     }
 
     @Override
     public ResponseEntity<UserWithoutPassword> getUserById(Integer id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.ACCEPTED);
+        ResponseEntity<UserWithoutPassword> responseEntity;
+        UserWithoutPassword userWithoutPassword = userService.getUserById(id);
+        if(userWithoutPassword != null){
+            responseEntity = new ResponseEntity<>(userWithoutPassword, HttpStatus.ACCEPTED);
+        }else {
+            responseEntity = new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        }
+        return responseEntity;
     }
 
     @Override
@@ -90,6 +103,12 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<Void> updateUser(Integer id, @Valid User user) {
-        return null;
+        ResponseEntity<Void> responseEntity;
+        if(userService.updateUserById(id, user)){
+            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }else {
+            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return responseEntity;
     }
 }

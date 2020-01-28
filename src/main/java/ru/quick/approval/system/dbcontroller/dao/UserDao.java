@@ -54,6 +54,16 @@ public class UserDao implements IUserDao {
     }
 
     /**
+     * Возвращает пользователя с заданным login'ом
+     * @param login
+     * @return UserQasRecord
+     */
+    @Override
+    public UserQasRecord getUserByLogin(String login) {
+        return dslContext.selectFrom(USER_QAS).where(USER_QAS.LOGIN.eq(login)).fetchAny();
+    }
+
+    /**
      * Обновляет данные для пользователя с заданным id
      * @param id
      * @param newUser объект записи пользователя с новыми данными

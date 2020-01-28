@@ -16,6 +16,8 @@ public interface IRoleDao {
 
     RoleQasRecord getRoleById(int id);
 
+    RoleQasRecord getRoleByName(String name);
+
     boolean updateRoleById(int id, RoleQasRecord newRole);
 
     boolean addRole(RoleQasRecord newRole);
