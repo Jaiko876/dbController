@@ -18,6 +18,8 @@ import java.util.List;
 
 @RestController
 public class ProcessTypeController implements TypeApi {
+    private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;
+    private static final HttpStatus OK = HttpStatus.OK;
     private final ProcessTypeService processTypeService;
 
     @Autowired
@@ -28,17 +30,17 @@ public class ProcessTypeController implements TypeApi {
     @Override
     public ResponseEntity<Void> addProcessType(@Valid ProcessType processType) {
         if (processTypeService.createNewProcessType(processType))
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(OK);
+        return new ResponseEntity<>(CONFLICT);
     }
 
     @Override
     public ResponseEntity<List<ProcessType>> allProcessTypes() {
-        return new ResponseEntity<>(processTypeService.getAllProcessTypes(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(processTypeService.getAllProcessTypes(), OK);
     }
 
     @Override
     public ResponseEntity<ProcessType> getProcessTypeById(Integer id) {
-        return new ResponseEntity<>(processTypeService.getProcessTypeById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(processTypeService.getProcessTypeById(id), OK);
     }
 }

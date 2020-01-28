@@ -18,6 +18,8 @@ import java.util.List;
 
 @RestController
 public class ProcessStageController implements StageApi {
+    private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;
+    private static final HttpStatus OK = HttpStatus.OK;
     private final ProcessStageService processStageService;
 
     @Autowired
@@ -28,17 +30,17 @@ public class ProcessStageController implements StageApi {
     @Override
     public ResponseEntity<Void> addProcessStageByTypeId(Integer id, @Valid ProcessStage processStage) {
         if (processStageService.addStageByProcessType(id, processStage))
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(OK);
+        return new ResponseEntity<>(CONFLICT);
     }
 
     @Override
     public ResponseEntity<List<ProcessStage>> allProcessStages() {
-        return new ResponseEntity<>(processStageService.getAllStages(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(processStageService.getAllStages(), OK);
     }
 
     @Override
     public ResponseEntity<ProcessStage> getProcessStageById(Integer id) {
-        return new ResponseEntity<>(processStageService.getStageById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(processStageService.getStageById(id), OK);
     }
 }

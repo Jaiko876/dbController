@@ -17,15 +17,15 @@ public class Interpreters {
     @SuppressWarnings("Duplicates")
     public static Process processRecordToProcess(ProcessRecord processRecord) {
         Process process = new Process();
-        process.setIdProcess(processRecord.component1());
-        process.setProcessTypeId(processRecord.component2());
-        process.setName(processRecord.component3());
-        process.setDescription(processRecord.component4());
-        process.setUserStartId(processRecord.component5());
-        process.setDateStart(processRecord.component6());
-        process.setDateEndPlanning(processRecord.component7());
-        process.setDateEndFact(processRecord.component8());
-        process.setStatusId(processRecord.component9());
+        process.setIdProcess(processRecord.getIdProcess());
+        process.setProcessTypeId(processRecord.getProcessTypeId());
+        process.setName(processRecord.getName());
+        process.setDescription(processRecord.getDescription());
+        process.setUserStartId(processRecord.getUserStartId());
+        process.setDateStart(processRecord.getDateStart());
+        process.setDateEndPlanning(processRecord.getDateEndPlanning());
+        process.setDateEndFact(processRecord.getDateEndFact());
+        process.setStatusId(processRecord.getStatusId());
         return process;
     }
 
@@ -47,10 +47,10 @@ public class Interpreters {
     @SuppressWarnings("Duplicates")
     public static ProcessStage processStageToProcessStageRecord(ProcessStageRecord processStageRecord) {
         ProcessStage processStage = new ProcessStage();
-        processStage.setIdProcessStage(processStageRecord.component1());
-        processStage.setProcessTypeId(processStageRecord.component2());
-        processStage.setStage(processStageRecord.component3());
-        processStage.setRoleId(processStageRecord.component4());
+        processStage.setIdProcessStage(processStageRecord.getIdProcessStage());
+        processStage.setProcessTypeId(processStageRecord.getProcessTypeId());
+        processStage.setStage(processStageRecord.getStage());
+        processStage.setRoleId(processStageRecord.getRoleId());
         return processStage;
     }
 
@@ -67,10 +67,10 @@ public class Interpreters {
     @SuppressWarnings("Duplicates")
     public static ProcessType processTypeRecordYoProcessType(ProcessTypeRecord processTypeRecord) {
         ProcessType processType = new ProcessType();
-        processType.setIdProcessType(processTypeRecord.component1());
-        processType.setName(processTypeRecord.component2());
-        processType.setDescription(processTypeRecord.component3());
-        processType.setTimeToDo(processTypeRecord.component4());
+        processType.setIdProcessType(processTypeRecord.getIdProcessType());
+        processType.setName(processTypeRecord.getName());
+        processType.setDescription(processTypeRecord.getDescription());
+        processType.setTimeToDo(processTypeRecord.getTimeToDo());
         return processType;
     }
 
@@ -87,14 +87,14 @@ public class Interpreters {
     @SuppressWarnings("Duplicates")
     public static Task taskRecordToTask(TaskRecord taskRecord) {
         Task task = new Task();
-        task.setIdTask(taskRecord.component1());
-        task.setProcessId(taskRecord.component2());
-        task.setUserPerformerId(taskRecord.component3());
-        task.setRolePerformerId(taskRecord.component4());
-        task.setDateStart(taskRecord.component5());
-        task.setDateEndPlanning(taskRecord.component6());
-        task.setDateEndFact(taskRecord.component7());
-        task.setStatusId(taskRecord.component8());
+        task.setIdTask(taskRecord.getIdTask());
+        task.setProcessId(taskRecord.getProcessId());
+        task.setUserPerformerId(taskRecord.getUserPerformerId());
+        task.setRolePerformerId(taskRecord.getRolePerformerId());
+        task.setDateStart(taskRecord.getDateStart());
+        task.setDateEndPlanning(taskRecord.getDateEndPlanning());
+        task.setDateEndFact(taskRecord.getDateEndFact());
+        task.setStatusId(taskRecord.getStatusId());
         return task;
     }
 
