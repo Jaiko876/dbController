@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.ProcessType;
 import ru.quick.approval.system.dbcontroller.dao.ProcessTypeDao;
 import ru.quick.approval.system.dbcontroller.service.iservice.IProcessType;
+import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,29 +18,16 @@ import java.util.List;
 
 @Service
 public class ProcessTypeService implements IProcessType {
+
     private final ProcessTypeDao processTypeDao;
+    private final ITranslator<ProcessTypeRecord, ProcessType> processTypeTranslator;
 
     @Autowired
-    private ProcessTypeService(ProcessTypeDao processTypeDao) {
+    private ProcessTypeService(ProcessTypeDao processTypeDao, ITranslator<ProcessTypeRecord, ProcessType> processTypeTranslator) {
+        this.processTypeTranslator = processTypeTranslator;
         this.processTypeDao = processTypeDao;
     }
 
-    static ProcessType toPojo(ProcessTypeRecord processTypeRecord) {
-        ProcessType processType = new ProcessType();
-        processType.setIdProcessType(processTypeRecord.component1());
-        processType.setName(processTypeRecord.component2());
-        processType.setDescription(processTypeRecord.component3());
-        processType.setTimeToDo(processTypeRecord.component4());
-        return processType;
-    }
-    static ProcessTypeRecord toRecord(ProcessType processType) {
-        ProcessTypeRecord processTypeRecord = new ProcessTypeRecord();
-        processTypeRecord.setIdProcessType(processType.getIdProcessType());
-        processTypeRecord.setName(processType.getName());
-        processTypeRecord.setDescription(processType.getDescription());
-        processTypeRecord.setTimeToDo(processType.getTimeToDo());
-        return processTypeRecord;
-    }
 
     /**
      * Возвращает все ProcessTypes
@@ -50,7 +38,7 @@ public class ProcessTypeService implements IProcessType {
         List<ProcessType> processTypeList = new ArrayList<>();
         List<ProcessTypeRecord> allProcessTypes = processTypeDao.getAllProcessTypes();
         for (ProcessTypeRecord processTypeRecord: allProcessTypes) {
-            processTypeList.add(toPojo(processTypeRecord));
+            processTypeList.add(processTypeTranslator.translate(processTypeRecord));
         }
         return processTypeList;
     }
@@ -62,7 +50,7 @@ public class ProcessTypeService implements IProcessType {
      */
     @Override
     public boolean createNewProcessType(ProcessType processType) {
-        return processTypeDao.addProcessType(toRecord(processType));
+        return processTypeDao.addProcessType(processTypeTranslator.reverseTranslate(processType));
     }
 
     /**
@@ -72,6 +60,6 @@ public class ProcessTypeService implements IProcessType {
      */
     @Override
     public ProcessType getProcessTypeById(int id) {
-        return toPojo(processTypeDao.getProcessTypeById(id));
+        return processTypeTranslator.translate(processTypeDao.getProcessTypeById(id));
     }
 }

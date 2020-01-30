@@ -1,7 +1,9 @@
 package ru.quick.approval.system.dbcontroller.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 import ru.quick.approval.system.api.controller.RoleApi;
 import ru.quick.approval.system.api.controller.RoleidApi;
@@ -19,6 +21,7 @@ import java.util.Optional;
  * @version 1.0
  */
 
+@RestController
 public class RoleController implements RoleApi, RoleidApi {
 
     private RoleService roleService;
@@ -40,7 +43,7 @@ public class RoleController implements RoleApi, RoleidApi {
 
     @Override
     public ResponseEntity<List<Role>> allRoles() {
-        return null;
+        return new ResponseEntity<>(roleService.allRoles(), HttpStatus.OK);
     }
 
     @Override

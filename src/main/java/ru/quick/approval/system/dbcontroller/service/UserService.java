@@ -1,13 +1,12 @@
 package ru.quick.approval.system.dbcontroller.service;
 
-import org.jooq.demo.db.tables.UserRole;
 import org.jooq.demo.db.tables.records.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.*;
 import ru.quick.approval.system.dbcontroller.dao.iDao.*;
 import ru.quick.approval.system.dbcontroller.service.iservice.IUserService;
-import ru.quick.approval.system.dbcontroller.staff.Interpreters;
+import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,21 @@ public class UserService implements IUserService {
     private final IStatusDao statusDao;
     private final IUserRoleDao userRoleDao;
 
+    private final ITranslator<TaskRecord, Task> taskTranslator;
+    private final ITranslator<RoleQasRecord, Role> roleTranslator;
+    private final ITranslator<UserQasRecord, User> userTranslator;
+    private final ITranslator<UserQasRecord, UserWithoutPassword> userWithoutPasswordTranslator;
+
     @Autowired
-    public UserService(IUserDao userDao, IRoleDao roleDao, ITaskDao taskDao, IStatusDao statusDao, IUserRoleDao userRoleDao){
+    public UserService(IUserDao userDao, IRoleDao roleDao, ITaskDao taskDao, IStatusDao statusDao, IUserRoleDao userRoleDao,
+                       ITranslator<UserQasRecord, User> userTranslator,
+                       ITranslator<RoleQasRecord, Role> roleTranslator,
+                       ITranslator<TaskRecord, Task> taskTranslator,
+                       ITranslator<UserQasRecord, UserWithoutPassword> userWithoutPasswordTranslator){
+        this.taskTranslator = taskTranslator;
+        this.userWithoutPasswordTranslator = userWithoutPasswordTranslator;
+        this.userTranslator = userTranslator;
+        this.roleTranslator = roleTranslator;
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.taskDao = taskDao;
@@ -45,13 +57,7 @@ public class UserService implements IUserService {
         List<UserQasRecord> records = userDao.getAllUsers();
         List<UserWithoutPassword> answer = new ArrayList<>();
         for (UserQasRecord record : records) {
-            UserWithoutPassword member = new UserWithoutPassword();
-            member.setIdUser(record.getIdUser());
-            member.setFio(record.getFio());
-            member.setEmail(record.getEmail());
-            member.setLogin(record.getLogin());
-            member.setTelegramChatId(record.getTelegramChatId());
-            answer.add(member);
+            answer.add(userWithoutPasswordTranslator.translate(record));
         }
         return answer;
     }
@@ -63,15 +69,7 @@ public class UserService implements IUserService {
      */
     @Override
     public boolean addUser(User newUser) {
-        UserQasRecord record = new UserQasRecord(
-                newUser.getIdUser(),
-                newUser.getFio(),
-                newUser.getLogin(),
-                newUser.getPassword(),
-                newUser.getEmail(),
-                newUser.getTelegramChatId()
-        );
-        return userDao.addUser(record);
+        return userDao.addUser(userTranslator.reverseTranslate(newUser));
     }
 
     /**
@@ -102,13 +100,8 @@ public class UserService implements IUserService {
         if(record == null){
             return null;
         }
-        UserWithoutPassword answer = new UserWithoutPassword();
-        answer.setIdUser(record.getIdUser());
-        answer.setFio(record.getFio());
-        answer.setEmail(record.getEmail());
-        answer.setLogin(record.getLogin());
-        answer.setTelegramChatId(record.getTelegramChatId());
-        return answer;
+
+        return userWithoutPasswordTranslator.translate(record);
     }
 
     /**
@@ -119,7 +112,7 @@ public class UserService implements IUserService {
      */
     @Override
     public boolean updateUserById(int id, User user) {
-        return userDao.updateUserById(id, Interpreters.userToUserQasRecord(user));
+        return userDao.updateUserById(id, userTranslator.reverseTranslate(user));
     }
 
     /**
@@ -135,7 +128,7 @@ public class UserService implements IUserService {
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
             if(tmp.getStatusId() == statusRecord.getIdStatus() && tmp.getUserPerformerId() == id){
-                Task task = Interpreters.taskRecordToTask(tmp);
+                Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
         }
@@ -155,7 +148,7 @@ public class UserService implements IUserService {
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
             if(tmp.getStatusId() == statusRecord.getIdStatus() && tmp.getUserPerformerId() == id){
-                Task task = Interpreters.taskRecordToTask(tmp);
+                Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
         }
@@ -175,7 +168,7 @@ public class UserService implements IUserService {
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
             if(tmp.getStatusId() == statusRecord.getIdStatus() && tmp.getUserPerformerId() == id){
-                Task task = Interpreters.taskRecordToTask(tmp);
+                Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
         }
@@ -194,7 +187,7 @@ public class UserService implements IUserService {
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
             if(tmp.getUserPerformerId() == id){
-                Task task = Interpreters.taskRecordToTask(tmp);
+                Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
         }
@@ -212,7 +205,7 @@ public class UserService implements IUserService {
         List<Role> roles = new ArrayList<>();
         for(UserRoleRecord tmp : userRoleRecords){
             if(tmp.getUserId() == id){
-                roles.add(Interpreters.roleQasRecordToRole(roleDao.getRoleById(tmp.getRoleId())));
+                roles.add(roleTranslator.translate(roleDao.getRoleById(tmp.getRoleId())));
             }
         }
         return roles;

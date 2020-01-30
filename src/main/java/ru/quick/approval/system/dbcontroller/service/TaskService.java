@@ -8,6 +8,7 @@ import ru.quick.approval.system.api.model.Task;
 import ru.quick.approval.system.dbcontroller.dao.StatusDao;
 import ru.quick.approval.system.dbcontroller.dao.TaskDao;
 import ru.quick.approval.system.dbcontroller.service.iservice.ITaskService;
+import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,52 +20,18 @@ import java.util.List;
 
 @Service
 public class TaskService implements ITaskService {
+
     private final TaskDao taskDao;
     private final StatusDao statusDao;
 
+    private final ITranslator<TaskRecord, Task> taskTranslator;
+
 
     @Autowired
-    private TaskService(TaskDao taskDao, StatusDao statusDao) {
+    private TaskService(TaskDao taskDao, StatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator) {
+        this.taskTranslator = taskTranslator;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
-    }
-
-    /**
-     * Метод, для перевода Record в Pojo
-     * @param taskRecord - Record
-     * @return - возвращает Pojo
-     */
-
-    static Task toPojo(TaskRecord taskRecord) {
-        Task task = new Task();
-        task.setIdTask(taskRecord.component1());
-        task.setProcessId(taskRecord.component2());
-        task.setUserPerformerId(taskRecord.component3());
-        task.setRolePerformerId(taskRecord.component4());
-        task.setDateStart(taskRecord.component5());
-        task.setDateEndPlanning(taskRecord.component6());
-        task.setDateEndFact(taskRecord.component7());
-        task.setStatusId(taskRecord.component8());
-        return task;
-    }
-
-    /**
-     * Метод, для перевода Pojo в Record
-     * @param task - Pojo
-     * @return - возвращает Record
-     */
-
-    static TaskRecord toTaskRecord(Task task) {
-        TaskRecord taskRecord = new TaskRecord();
-        taskRecord.setIdTask(task.getIdTask());
-        taskRecord.setProcessId(task.getProcessId());
-        taskRecord.setUserPerformerId(task.getUserPerformerId());
-        taskRecord.setRolePerformerId(task.getRolePerformerId());
-        taskRecord.setDateStart(task.getDateStart());
-        taskRecord.setDateEndPlanning(task.getDateEndPlanning());
-        taskRecord.setDateEndFact(task.getDateEndFact());
-        taskRecord.setStatusId(task.getStatusId());
-        return taskRecord;
     }
 
     /**
@@ -76,7 +43,7 @@ public class TaskService implements ITaskService {
         List<Task> taskList = new ArrayList<>();
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         for (TaskRecord taskRecord: taskRecords) {
-            taskList.add(toPojo(taskRecord));
+            taskList.add(taskTranslator.translate(taskRecord));
         }
         return taskList;
     }
@@ -88,7 +55,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public Task getTaskById(int id) {
-        return toPojo(taskDao.getTaskById(id));
+        return taskTranslator.translate(taskDao.getTaskById(id));
     }
 
     /**
@@ -99,7 +66,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public boolean updateTaskById(int id, Task task) {
-        return taskDao.updateTaskById(id, toTaskRecord(task));
+        return taskDao.updateTaskById(id, taskTranslator.reverseTranslate(task));
     }
 
     /**
@@ -109,7 +76,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public boolean updateTaskByIdSended(int id) {
-        Task task = toPojo(taskDao.getTaskById(id));
+        Task task = taskTranslator.translate(taskDao.getTaskById(id));
         StatusRecord statusRecord = statusDao.getStatusByName("Sended");
         task.setStatusId(statusRecord.getIdStatus());
         return updateTaskById(id, task);
@@ -122,7 +89,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public boolean updateTaskByIdAgreed(int id) {
-        Task task = toPojo(taskDao.getTaskById(id));
+        Task task = taskTranslator.translate(taskDao.getTaskById(id));
         StatusRecord statusRecord = statusDao.getStatusByName("Agreed");
         task.setStatusId(statusRecord.getIdStatus());
         return updateTaskById(id, task);
@@ -135,7 +102,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public boolean updateTaskByIdActive(int id) {
-        Task task = toPojo(taskDao.getTaskById(id));
+        Task task = taskTranslator.translate(taskDao.getTaskById(id));
         StatusRecord statusRecord = statusDao.getStatusByName("Active");
         task.setStatusId(statusRecord.getIdStatus());
         return updateTaskById(id, task);
@@ -148,7 +115,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public boolean updateTaskByIdDenied(int id) {
-        Task task = toPojo(taskDao.getTaskById(id));
+        Task task = taskTranslator.translate(taskDao.getTaskById(id));
         StatusRecord statusRecord = statusDao.getStatusByName("Denied");
         task.setStatusId(statusRecord.getIdStatus());
         return updateTaskById(id, task);
@@ -161,7 +128,7 @@ public class TaskService implements ITaskService {
      */
     @Override
     public boolean updateTaskByIdCanceled(int id) {
-        Task task = toPojo(taskDao.getTaskById(id));
+        Task task = taskTranslator.translate(taskDao.getTaskById(id));
         StatusRecord statusRecord = statusDao.getStatusByName("Canceled");
         task.setStatusId(statusRecord.getIdStatus());
         return updateTaskById(id, task);
