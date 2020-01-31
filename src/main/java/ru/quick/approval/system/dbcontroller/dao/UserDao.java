@@ -35,11 +35,7 @@ public class UserDao implements IUserDao {
      */
     @Override
     public List<UserQasRecord> getAllUsers() {
-        List<UserQasRecord> answer = new ArrayList<>();
-        Result<UserQasRecord> result = dslContext.selectFrom(USER_QAS).fetch();
-        for (UserQasRecord record : result){
-            answer.add(record);
-        }
+        List<UserQasRecord> answer = dslContext.selectFrom(USER_QAS).fetch();
         return answer;
     }
 

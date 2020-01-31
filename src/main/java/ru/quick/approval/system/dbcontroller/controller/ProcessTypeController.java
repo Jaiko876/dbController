@@ -18,7 +18,8 @@ import java.util.List;
 
 @RestController
 public class ProcessTypeController implements TypeApi {
-    private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;
+
+    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private static final HttpStatus OK = HttpStatus.OK;
     private final ProcessTypeService processTypeService;
 
@@ -31,7 +32,7 @@ public class ProcessTypeController implements TypeApi {
     public ResponseEntity<Void> addProcessType(@Valid ProcessType processType) {
         if (processTypeService.createNewProcessType(processType))
             return new ResponseEntity<>(OK);
-        return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override

@@ -24,6 +24,8 @@ import java.util.Optional;
 @RestController
 public class RoleController implements RoleApi, RoleidApi {
 
+    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
+    private static final HttpStatus OK = HttpStatus.OK;
     private RoleService roleService;
 
     @Autowired
@@ -38,23 +40,25 @@ public class RoleController implements RoleApi, RoleidApi {
 
     @Override
     public ResponseEntity<Void> addRole(@Valid Role role) {
-        return null;
+        if(roleService.addRole(role)){
+            return new ResponseEntity<>(OK);
+        }
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<List<Role>> allRoles() {
-        return new ResponseEntity<>(roleService.allRoles(), HttpStatus.OK);
+        return new ResponseEntity<>(roleService.allRoles(), OK);
     }
 
     @Override
     public ResponseEntity<List<UserWithoutPassword>> getUsersByRoleId(Integer id) {
-        return null;
+        return new ResponseEntity<>(roleService.getUsersByRoleId(id), OK);
     }
 
     @Override
     public ResponseEntity<Role> getRoleById(Integer id) {
-        return null;
+        return new ResponseEntity<>(roleService.getRoleById(id), OK);
     }
-
 
 }

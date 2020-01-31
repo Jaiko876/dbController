@@ -123,11 +123,12 @@ public class UserService implements IUserService {
     @Override
     @SuppressWarnings("Duplicates")
     public List<Task> getActiveTaskListOfUserById(int id) {
-        StatusRecord statusRecord = statusDao.getStatusByName("active");
+        StatusRecord active = statusDao.getStatusByName("active");
+        StatusRecord sended = statusDao.getStatusByName("sended");
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
-            if(tmp.getStatusId() == statusRecord.getIdStatus() && tmp.getUserPerformerId() == id){
+            if((tmp.getStatusId() == active.getIdStatus() || tmp.getStatusId() == sended.getIdStatus()) && tmp.getUserPerformerId() == id){
                 Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
@@ -143,11 +144,12 @@ public class UserService implements IUserService {
     @Override
     @SuppressWarnings("Duplicates")
     public List<Task> getCompleteTaskListOfUserById(int id) {
-        StatusRecord statusRecord = statusDao.getStatusByName("complete");
+        StatusRecord agreed = statusDao.getStatusByName("agreed");
+        StatusRecord denied = statusDao.getStatusByName("denied");
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
-            if(tmp.getStatusId() == statusRecord.getIdStatus() && tmp.getUserPerformerId() == id){
+            if((tmp.getStatusId() == agreed.getIdStatus() || tmp.getStatusId() == denied.getIdStatus()) && tmp.getUserPerformerId() == id){
                 Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
@@ -215,10 +217,5 @@ public class UserService implements IUserService {
     public boolean login(InlineObject authData) {
         UserQasRecord userQasRecord = userDao.getUserByLogin(authData.getLogin());
         return userQasRecord.getPassword() == authData.getPassword();
-    }
-
-    @Override
-    public boolean logout() {
-        return false;
     }
 }

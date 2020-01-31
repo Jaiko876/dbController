@@ -100,7 +100,7 @@ public class ProcessService  implements IProcessService {
     public StatusType getProcessStatusById(int process_id) {
         Process process = processTranslator.translate(processDao.getProcessById(process_id));
         StatusRecord statusById = statusDao.getStatusById(process.getStatusId());
-        return StatusType.fromValue(statusById.value2());
+        return StatusType.fromValue(statusById.getName());
     }
 
     /**
@@ -166,7 +166,9 @@ public class ProcessService  implements IProcessService {
     public List<Process> getProcessStatusComplete() {
         List<Process> processList = new ArrayList<>();
         List<ProcessRecord> processByStatusId = processDao.getProcessByStatusId
-                (statusDao.getStatusByName("Complete").getIdStatus());
+                (statusDao.getStatusByName("agreed").getIdStatus());
+        processByStatusId.addAll(processDao.getProcessByStatusId
+                (statusDao.getStatusByName("denied").getIdStatus()));
         for (ProcessRecord processRecord: processByStatusId) {
             processList.add(processTranslator.translate(processRecord));
         }
