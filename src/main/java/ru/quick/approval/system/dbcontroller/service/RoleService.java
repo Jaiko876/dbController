@@ -4,13 +4,14 @@ import org.jooq.demo.db.tables.records.RoleQasRecord;
 import org.jooq.demo.db.tables.records.UserQasRecord;
 import org.jooq.demo.db.tables.records.UserRoleRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.Role;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
 import ru.quick.approval.system.dbcontroller.dao.RoleDao;
 import ru.quick.approval.system.dbcontroller.dao.UserDao;
 import ru.quick.approval.system.dbcontroller.dao.UserRoleDao;
 import ru.quick.approval.system.dbcontroller.service.iservice.IRoleService;
-import ru.quick.approval.system.dbcontroller.staff.Interpreters;
+import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +22,19 @@ import java.util.List;
  * @version 1.0
  */
 
+@Service
 public class RoleService implements IRoleService {
 
     private RoleDao roleDao;
     private UserDao userDao;
     private UserRoleDao userRoleDao;
+    private final ITranslator<UserQasRecord, UserWithoutPassword> userWithoutPasswordTranslator;
+    private final ITranslator<RoleQasRecord, Role> roleTranslator;
 
     @Autowired
-    public RoleService(RoleDao roleDao, UserDao userDao, UserRoleDao userRoleDao){
+    public RoleService(RoleDao roleDao, UserDao userDao, UserRoleDao userRoleDao, ITranslator<UserQasRecord, UserWithoutPassword> userWithoutPasswordTranslator, ITranslator<RoleQasRecord, Role> roleTranslator){
+        this.userWithoutPasswordTranslator = userWithoutPasswordTranslator;
+        this.roleTranslator = roleTranslator;
         this.roleDao = roleDao;
         this.userDao = userDao;
         this.userRoleDao = userRoleDao;
@@ -41,7 +47,7 @@ public class RoleService implements IRoleService {
      */
     @Override
     public boolean addRole(Role role) {
-        return roleDao.addRole(Interpreters.roleToRoleQasRecord(role));
+        return roleDao.addRole(roleTranslator.reverseTranslate(role));
     }
 
     /**
@@ -53,7 +59,7 @@ public class RoleService implements IRoleService {
         List<RoleQasRecord> records = roleDao.getAllRoles();
         List<Role> roles = new ArrayList<>();
         for(RoleQasRecord tmp : records){
-            roles.add(Interpreters.roleQasRecordToRole(tmp));
+            roles.add(roleTranslator.translate(tmp));
         }
         return roles;
     }
@@ -69,7 +75,7 @@ public class RoleService implements IRoleService {
         List<UserRoleRecord> records = userRoleDao.getAllUserRoles();
         for(UserRoleRecord tmp : records){
             if(tmp.getRoleId() == id){
-                answer.add(Interpreters.userQasRecordToUserWithoutPassword(userDao.getUserById(tmp.getUserId())));
+                answer.add(userWithoutPasswordTranslator.translate(userDao.getUserById(tmp.getUserId())));
             }
         }
         return answer;
@@ -82,6 +88,6 @@ public class RoleService implements IRoleService {
      */
     @Override
     public Role getRoleById(int id) {
-        return Interpreters.roleQasRecordToRole(roleDao.getRoleById(id));
+        return roleTranslator.translate(roleDao.getRoleById(id));
     }
 }

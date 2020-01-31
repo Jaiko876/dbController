@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.ProcessStage;
 import ru.quick.approval.system.dbcontroller.dao.ProcessStageDao;
 import ru.quick.approval.system.dbcontroller.service.iservice.IProcessStage;
+import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,26 +20,11 @@ import java.util.List;
 public class ProcessStageService implements IProcessStage {
     private final ProcessStageDao processStageDao;
 
-    static ProcessStage toPojo(ProcessStageRecord processStageRecord) {
-        ProcessStage processStage = new ProcessStage();
-        processStage.setIdProcessStage(processStageRecord.component1());
-        processStage.setProcessTypeId(processStageRecord.component2());
-        processStage.setStage(processStageRecord.component3());
-        processStage.setRoleId(processStageRecord.component4());
-        return processStage;
-    }
-
-    static ProcessStageRecord toRecord(ProcessStage processStage) {
-        ProcessStageRecord processStageRecord = new ProcessStageRecord();
-        processStageRecord.setIdProcessStage(processStage.getIdProcessStage());
-        processStageRecord.setProcessTypeId(processStage.getProcessTypeId());
-        processStageRecord.setStage(processStage.getStage());
-        processStageRecord.setRoleId(processStage.getRoleId());
-        return processStageRecord;
-    }
+    private final ITranslator<ProcessStageRecord, ProcessStage> processStageTranslator;
 
     @Autowired
-    private ProcessStageService(ProcessStageDao processStageDao) {
+    private ProcessStageService(ProcessStageDao processStageDao, ITranslator<ProcessStageRecord, ProcessStage> processStageTranslator) {
+        this.processStageTranslator = processStageTranslator;
         this.processStageDao = processStageDao;
     }
 
@@ -51,7 +37,7 @@ public class ProcessStageService implements IProcessStage {
         List<ProcessStage> processStageList = new ArrayList<>();
         List<ProcessStageRecord> allProcessStages = processStageDao.getAllProcessStages();
         for (ProcessStageRecord processStage: allProcessStages) {
-            processStageList.add(toPojo(processStage));
+            processStageList.add(processStageTranslator.translate(processStage));
         }
         return processStageList;
     }
@@ -63,7 +49,7 @@ public class ProcessStageService implements IProcessStage {
      */
     @Override
     public ProcessStage getStageById(int id) {
-        return toPojo(processStageDao.getProcessStageById(id));
+        return processStageTranslator.translate(processStageDao.getProcessStageById(id));
     }
 
     /**
@@ -75,6 +61,6 @@ public class ProcessStageService implements IProcessStage {
     @Override
     public boolean addStageByProcessType(int process_type_id, ProcessStage processStage) {
         processStage.setProcessTypeId(process_type_id);
-        return processStageDao.addProcessStage(toRecord(processStage));
+        return processStageDao.addProcessStage(processStageTranslator.reverseTranslate(processStage));
     }
 }

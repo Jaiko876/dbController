@@ -12,6 +12,7 @@ import ru.quick.approval.system.dbcontroller.dao.ProcessDao;
 import ru.quick.approval.system.dbcontroller.dao.StatusDao;
 import ru.quick.approval.system.dbcontroller.dao.TaskDao;
 import ru.quick.approval.system.dbcontroller.service.iservice.IProcessService;
+import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,43 +24,21 @@ import java.util.List;
 
 @Service
 public class ProcessService  implements IProcessService {
+
     private final ProcessDao processDao;
     private final TaskDao taskDao;
     private final StatusDao statusDao;
 
+    private final ITranslator<TaskRecord, Task> taskTranslator;
+    private final ITranslator<ProcessRecord, Process> processTranslator;
+
     @Autowired
-    private ProcessService(ProcessDao processDao, TaskDao taskDao, StatusDao statusDao) {
+    private ProcessService(ProcessDao processDao, TaskDao taskDao, StatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator,ITranslator<ProcessRecord, Process> processTranslator) {
         this.processDao = processDao;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
-    }
-
-    static Process toPojo(ProcessRecord processRecord) {
-        Process process = new Process();
-        process.setIdProcess(processRecord.component1());
-        process.setProcessTypeId(processRecord.component2());
-        process.setName(processRecord.component3());
-        process.setDescription(processRecord.component4());
-        process.setUserStartId(processRecord.component5());
-        process.setDateStart(processRecord.component6());
-        process.setDateEndPlanning(processRecord.component7());
-        process.setDateEndFact(processRecord.component8());
-        process.setStatusId(processRecord.component9());
-        return process;
-    }
-
-    static ProcessRecord toProcessRecord(Process process) {
-        ProcessRecord processRecord = new ProcessRecord();
-        processRecord.setIdProcess(process.getIdProcess());
-        processRecord.setProcessTypeId(process.getProcessTypeId());
-        processRecord.setName(process.getName());
-        processRecord.setDescription(process.getDescription());
-        processRecord.setUserStartId(process.getUserStartId());
-        processRecord.setDateStart(process.getDateStart());
-        processRecord.setDateEndPlanning(process.getDateEndPlanning());
-        processRecord.setDateEndFact(process.getDateEndFact());
-        processRecord.setStatusId(process.getStatusId());
-        return processRecord;
+        this.processTranslator = processTranslator;
+        this.taskTranslator = taskTranslator;
     }
 
     /**
@@ -71,7 +50,7 @@ public class ProcessService  implements IProcessService {
         List<Process> processList = new ArrayList<>();
         List<ProcessRecord> allProcesses = processDao.getAllProcesses();
         for (ProcessRecord processRecord: allProcesses) {
-            processList.add(toPojo(processRecord));
+            processList.add(processTranslator.translate(processRecord));
         }
         return processList;
     }
@@ -83,7 +62,7 @@ public class ProcessService  implements IProcessService {
      */
     @Override
     public Process getProcessById(int id) {
-        return toPojo(processDao.getProcessById(id));
+        return processTranslator.translate(processDao.getProcessById(id));
     }
 
     /**
@@ -94,7 +73,7 @@ public class ProcessService  implements IProcessService {
      */
     @Override
     public boolean updateProcessById(int id, Process process) {
-        return processDao.updateProcessById(id, toProcessRecord(process));
+        return processDao.updateProcessById(id, processTranslator.reverseTranslate(process));
     }
 
     /**
@@ -107,7 +86,7 @@ public class ProcessService  implements IProcessService {
         List<Task> taskList = new ArrayList<>();
         List<TaskRecord> allTasksByProcessId = taskDao.getAllTasksByProcessId(id);
         for (TaskRecord taskRecord: allTasksByProcessId) {
-            taskList.add(TaskService.toPojo(taskRecord));
+            taskList.add(taskTranslator.translate(taskRecord));
         }
         return taskList;
     }
@@ -119,7 +98,7 @@ public class ProcessService  implements IProcessService {
      */
     @Override
     public StatusType getProcessStatusById(int process_id) {
-        Process process = toPojo(processDao.getProcessById(process_id));
+        Process process = processTranslator.translate(processDao.getProcessById(process_id));
         StatusRecord statusById = statusDao.getStatusById(process.getStatusId());
         return StatusType.fromValue(statusById.value2());
     }
@@ -135,7 +114,7 @@ public class ProcessService  implements IProcessService {
     public boolean createNewTaskByUserId(int process_id, int user_id, Task task) {
         task.setProcessId(process_id);
         task.setUserPerformerId(user_id);
-        return taskDao.addTask(TaskService.toTaskRecord(task));
+        return taskDao.addTask(taskTranslator.reverseTranslate(task));
     }
 
     /**
@@ -149,7 +128,7 @@ public class ProcessService  implements IProcessService {
     public boolean createNewTaskByRoleId(int process_id, int role_id, Task task) {
         task.setProcessId(process_id);
         task.setRolePerformerId(role_id);
-        return taskDao.addTask(TaskService.toTaskRecord(task));
+        return taskDao.addTask(taskTranslator.reverseTranslate(task));
     }
 
     /**
@@ -161,7 +140,7 @@ public class ProcessService  implements IProcessService {
     @Override
     public boolean createNewProcessByProcessType(int process_type_id, Process process) {
         process.setProcessTypeId(process_type_id);
-        return processDao.addProcess(toProcessRecord(process));
+        return processDao.addProcess(processTranslator.reverseTranslate(process));
     }
 
     /**
@@ -174,10 +153,11 @@ public class ProcessService  implements IProcessService {
         List<ProcessRecord> processByStatusId = processDao.getProcessByStatusId
                 (statusDao.getStatusByName("Active").getIdStatus());
         for (ProcessRecord processRecord: processByStatusId) {
-            processList.add(toPojo(processRecord));
+            processList.add(processTranslator.translate(processRecord));
         }
         return processList;
     }
+
     /**
      * Метод возвращает все завершенные процессы
      * @return - List<Process>
@@ -188,7 +168,7 @@ public class ProcessService  implements IProcessService {
         List<ProcessRecord> processByStatusId = processDao.getProcessByStatusId
                 (statusDao.getStatusByName("Complete").getIdStatus());
         for (ProcessRecord processRecord: processByStatusId) {
-            processList.add(toPojo(processRecord));
+            processList.add(processTranslator.translate(processRecord));
         }
         return processList;
     }
