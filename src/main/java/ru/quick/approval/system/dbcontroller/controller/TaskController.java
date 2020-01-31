@@ -18,6 +18,9 @@ import java.util.List;
 
 @RestController
 public class TaskController implements TaskApi {
+
+    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
+    private static final HttpStatus OK = HttpStatus.OK;
     private final TaskService taskService;
 
     @Autowired
@@ -27,59 +30,59 @@ public class TaskController implements TaskApi {
 
     @Override
     public ResponseEntity<List<Task>> getAllTask() {
-        return new ResponseEntity<>(taskService.getAllTask(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(taskService.getAllTask(), OK);
     }
 
     @Override
     public ResponseEntity<Task> getTaskById(Integer id) {
-        return new ResponseEntity<>(taskService.getTaskById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(taskService.getTaskById(id), OK);
     }
 
     @Override
     public ResponseEntity<Void> updateTaskById(Integer id, @Valid Task task) {
         if (taskService.updateTaskById(id,task)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> updateTaskByIdActive(Integer id) {
         if (taskService.updateTaskByIdActive(id)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> updateTaskByIdAgreed(Integer id) {
         if (taskService.updateTaskByIdAgreed(id)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> updateTaskByIdCanceled(Integer id) {
         if (taskService.updateTaskByIdCanceled(id)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> updateTaskByIdDenied(Integer id) {
         if (taskService.updateTaskByIdDenied(id)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> updateTaskByIdSended(Integer id) {
         if (taskService.updateTaskByIdSended(id)) {
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 }

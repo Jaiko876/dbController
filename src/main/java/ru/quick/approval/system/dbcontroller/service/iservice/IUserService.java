@@ -84,7 +84,10 @@ public interface IUserService {
      */
     List<Role> getRoleListOfUserById(Integer id);
 
+    /**
+     * Сверяет пришедшие данные для авторизации с данными из базы
+     * @param authData объект содержит логин пользователя и его пароль
+     * @return true, если все прошло успешно, иначе false
+     */
     boolean login(InlineObject authData);
-
-    boolean logout();
 }

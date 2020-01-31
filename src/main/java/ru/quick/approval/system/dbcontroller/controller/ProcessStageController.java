@@ -18,7 +18,8 @@ import java.util.List;
 
 @RestController
 public class ProcessStageController implements StageApi {
-    private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;
+
+    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private static final HttpStatus OK = HttpStatus.OK;
     private final ProcessStageService processStageService;
 
@@ -31,7 +32,7 @@ public class ProcessStageController implements StageApi {
     public ResponseEntity<Void> addProcessStageByTypeId(Integer id, @Valid ProcessStage processStage) {
         if (processStageService.addStageByProcessType(id, processStage))
             return new ResponseEntity<>(OK);
-        return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override

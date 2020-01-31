@@ -20,6 +20,8 @@ import java.util.List;
 @RestController
 public class UserController implements UserApi {
 
+    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
+    private static final HttpStatus OK = HttpStatus.OK;
     private IUserService userService;
 
     @Autowired
@@ -31,9 +33,9 @@ public class UserController implements UserApi {
     public ResponseEntity<Void> addRoleToUserById(Integer id, @Valid Role role) {
         ResponseEntity<Void> responseEntity;
         if(userService.addRoleToUserById(id, role)){
-            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+            responseEntity = new ResponseEntity<>(OK);
         }else{
-            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+            responseEntity = new ResponseEntity<>(ERROR);
         }
         return responseEntity;
     }
@@ -42,41 +44,41 @@ public class UserController implements UserApi {
     public ResponseEntity<Void> addUser(@Valid User user) {
         ResponseEntity<Void> responseEntity;
         if(userService.addUser(user)){
-            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+            responseEntity = new ResponseEntity<>(OK);
         }else {
-            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+            responseEntity = new ResponseEntity<>(ERROR);
         }
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<List<UserWithoutPassword>> allUsers() {
-        return new ResponseEntity<>(userService.allUsers(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.allUsers(), OK);
     }
 
     @Override
     public ResponseEntity<List<Task>> getActiveTaskListOfUserById(Integer id) {
-        return new ResponseEntity<>(userService.getActiveTaskListOfUserById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.getActiveTaskListOfUserById(id), OK);
     }
 
     @Override
     public ResponseEntity<List<Task>> getCompleteTaskListOfUserById(Integer id) {
-        return new ResponseEntity<>(userService.getCompleteTaskListOfUserById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.getCompleteTaskListOfUserById(id), OK);
     }
 
     @Override
     public ResponseEntity<List<Task>> getWaitTaskListOfUserById(Integer id) {
-        return new ResponseEntity<>(userService.getWaitTaskListOfUserById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.getWaitTaskListOfUserById(id), OK);
     }
 
     @Override
     public ResponseEntity<List<Role>> getRoleListOfUserById(Integer id) {
-        return new ResponseEntity<>(userService.getRoleListOfUserById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.getRoleListOfUserById(id), OK);
     }
 
     @Override
     public ResponseEntity<List<Task>> getTaskListOfUserById(Integer id) {
-        return new ResponseEntity<>(userService.getTaskListOfUserById(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.getTaskListOfUserById(id), OK);
     }
 
     @Override
@@ -84,30 +86,25 @@ public class UserController implements UserApi {
         ResponseEntity<UserWithoutPassword> responseEntity;
         UserWithoutPassword userWithoutPassword = userService.getUserById(id);
         if(userWithoutPassword != null){
-            responseEntity = new ResponseEntity<>(userWithoutPassword, HttpStatus.ACCEPTED);
+            responseEntity = new ResponseEntity<>(userWithoutPassword, OK);
         }else {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.CONFLICT);
+            responseEntity = new ResponseEntity<>(null, ERROR);
         }
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<UserWithoutPassword> login(@Valid InlineObject inlineObject) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Void> logout() {
-        return null;
+    public ResponseEntity<Boolean> login(@Valid InlineObject inlineObject) {
+        return new ResponseEntity<>(userService.login(inlineObject), OK);
     }
 
     @Override
     public ResponseEntity<Void> updateUser(Integer id, @Valid User user) {
         ResponseEntity<Void> responseEntity;
         if(userService.updateUserById(id, user)){
-            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+            responseEntity = new ResponseEntity<>(OK);
         }else {
-            responseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+            responseEntity = new ResponseEntity<>(ERROR);
         }
         return responseEntity;
     }

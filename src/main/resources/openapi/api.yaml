@@ -281,24 +281,9 @@ paths:
         '200':
           description: user response
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/UserWithoutPassword'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /user/logout:
-    get:
-      tags:
-        - user
-      description: выход пользователя из системы
-      operationId: logout
-      responses:
-        '200':
-          description: user response
+                type: boolean
         default:
           description: unexpected error
           content:
@@ -376,7 +361,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /role{id}:
+  /role/{id}:
     get:
       tags:
         - role

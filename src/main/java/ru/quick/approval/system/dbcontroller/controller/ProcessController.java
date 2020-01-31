@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 public class ProcessController implements ProcessApi {
     private static final HttpStatus OK = HttpStatus.OK;
-    private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;
+    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private final ProcessService processService;
 
     @Autowired
@@ -33,21 +33,21 @@ public class ProcessController implements ProcessApi {
     public ResponseEntity<Void> createProcessByProcessType(Integer id, @Valid Process process) {
         if (processService.createNewProcessByProcessType(id, process))
             return new ResponseEntity<>(OK);
-        return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> createProcessTaskByRoleId(Integer id, Integer roleId, @Valid Task task) {
         if (processService.createNewTaskByRoleId(id, roleId, task))
             return new ResponseEntity<>(OK);
-        return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
     public ResponseEntity<Void> createProcessTaskByUserId(Integer id, Integer userId, @Valid Task task) {
         if (processService.createNewTaskByUserId(id, userId, task))
             return new ResponseEntity<>(OK);
-        return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 
     @Override
@@ -86,6 +86,6 @@ public class ProcessController implements ProcessApi {
     public ResponseEntity<Void> updateProcessById(Integer id, @Valid Process process) {
         if (processService.updateProcessById(id, process))
             return new ResponseEntity<>(OK);
-        return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(ERROR);
     }
 }
