@@ -4,8 +4,8 @@ import org.jooq.demo.db.tables.records.ProcessTypeRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.ProcessType;
-import ru.quick.approval.system.dbcontroller.dao.ProcessTypeDao;
-import ru.quick.approval.system.dbcontroller.service.iservice.IProcessType;
+import ru.quick.approval.system.dbcontroller.dao.iDao.IProcessTypeDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessTypeService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
@@ -17,13 +17,13 @@ import java.util.List;
  */
 
 @Service
-public class ProcessTypeService implements IProcessType {
+public class ProcessTypeService implements IProcessTypeService {
 
-    private final ProcessTypeDao processTypeDao;
+    private final IProcessTypeDao processTypeDao;
     private final ITranslator<ProcessTypeRecord, ProcessType> processTypeTranslator;
 
     @Autowired
-    private ProcessTypeService(ProcessTypeDao processTypeDao, ITranslator<ProcessTypeRecord, ProcessType> processTypeTranslator) {
+    public ProcessTypeService(IProcessTypeDao processTypeDao, ITranslator<ProcessTypeRecord, ProcessType> processTypeTranslator) {
         this.processTypeTranslator = processTypeTranslator;
         this.processTypeDao = processTypeDao;
     }

@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.ProcessStage;
 import ru.quick.approval.system.dbcontroller.dao.ProcessStageDao;
-import ru.quick.approval.system.dbcontroller.service.iservice.IProcessStage;
+import ru.quick.approval.system.dbcontroller.dao.iDao.IProcessStageDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessStageService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
 import java.util.ArrayList;
@@ -17,13 +18,14 @@ import java.util.List;
  */
 
 @Service
-public class ProcessStageService implements IProcessStage {
-    private final ProcessStageDao processStageDao;
+public class ProcessStageService implements IProcessStageService {
+
+    private final IProcessStageDao processStageDao;
 
     private final ITranslator<ProcessStageRecord, ProcessStage> processStageTranslator;
 
     @Autowired
-    private ProcessStageService(ProcessStageDao processStageDao, ITranslator<ProcessStageRecord, ProcessStage> processStageTranslator) {
+    public ProcessStageService(IProcessStageDao processStageDao, ITranslator<ProcessStageRecord, ProcessStage> processStageTranslator) {
         this.processStageTranslator = processStageTranslator;
         this.processStageDao = processStageDao;
     }

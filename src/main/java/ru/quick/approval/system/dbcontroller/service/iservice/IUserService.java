@@ -90,4 +90,11 @@ public interface IUserService {
      * @return true, если все прошло успешно, иначе false
      */
     boolean login(InlineObject authData);
+
+    /**
+     * Возвращает список всех задач пользователя с заданным телеграм айди
+     * @param telegramId
+     * @return List<Task>
+     */
+    List<Task> getTasksByTelegramId(Integer telegramId);
 }

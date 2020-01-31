@@ -4,7 +4,7 @@ import ru.quick.approval.system.api.model.ProcessStage;
 
 import java.util.List;
 
-public interface IProcessStage {
+public interface IProcessStageService {
 
     /**
      * Возвращает все Stage
