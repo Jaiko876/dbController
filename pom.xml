@@ -23,7 +23,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -59,13 +58,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
             <version>3.12.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -76,11 +73,59 @@
             <artifactId>swagger-annotations</artifactId>
             <version>1.6.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${basedir}/target/classes/db/migration">
+                                    <fileset dir="${basedir}/src/main/resources/db/migration" includes="**/*" />
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>6.0.3</version>
+                <executions>
+                    <execution>
+                        <id>init_db</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>migrate</goal>
+                        </goals>
+                        <configuration>
+                            <driver>org.postgresql.Driver</driver>
+                            <url>jdbc:postgresql://localhost:5433/demo</url>
+                            <user>docker</user>
+                            <password>admin</password>
+                            <schemas>
+                                <schema>qas</schema>
+                            </schemas>
+                            <locations>
+                                <location>/db/migration/init</location>
+                            </locations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!--      Генерация REST API-->
             <plugin>
                 <groupId>org.openapitools</groupId>
@@ -151,7 +196,6 @@
                     </generator>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
