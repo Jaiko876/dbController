@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 import ru.quick.approval.system.api.controller.RoleApi;
-import ru.quick.approval.system.api.controller.RoleidApi;
 import ru.quick.approval.system.api.model.Role;
-import ru.quick.approval.system.api.model.User;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
 import ru.quick.approval.system.dbcontroller.service.RoleService;
 
@@ -22,7 +20,7 @@ import java.util.Optional;
  */
 
 @RestController
-public class RoleController implements RoleApi, RoleidApi {
+public class RoleController implements RoleApi {
 
     private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private static final HttpStatus OK = HttpStatus.OK;
