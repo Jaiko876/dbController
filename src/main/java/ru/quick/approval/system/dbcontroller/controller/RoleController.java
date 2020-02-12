@@ -1,12 +1,12 @@
 package ru.quick.approval.system.dbcontroller.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 import ru.quick.approval.system.api.controller.RoleApi;
-import ru.quick.approval.system.api.controller.RoleidApi;
 import ru.quick.approval.system.api.model.Role;
 import ru.quick.approval.system.api.model.User;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
@@ -21,8 +21,9 @@ import java.util.Optional;
  * @version 1.0
  */
 
+@Slf4j
 @RestController
-public class RoleController implements RoleApi, RoleidApi {
+public class RoleController implements RoleApi {
 
     private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private static final HttpStatus OK = HttpStatus.OK;
@@ -31,15 +32,12 @@ public class RoleController implements RoleApi, RoleidApi {
     @Autowired
     public RoleController(RoleService roleService){
         this.roleService = roleService;
-    }
-
-    @Override
-    public Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
+        log.info("RoleController was created");
     }
 
     @Override
     public ResponseEntity<Void> addRole(@Valid Role role) {
+        log.info("Request for adding role");
         if(roleService.addRole(role)){
             return new ResponseEntity<>(OK);
         }
@@ -48,16 +46,19 @@ public class RoleController implements RoleApi, RoleidApi {
 
     @Override
     public ResponseEntity<List<Role>> allRoles() {
+        log.info("Request for all roles");
         return new ResponseEntity<>(roleService.allRoles(), OK);
     }
 
     @Override
     public ResponseEntity<List<UserWithoutPassword>> getUsersByRoleId(Integer id) {
+        log.info("Request for all users by role id (role id = " + id + ")");
         return new ResponseEntity<>(roleService.getUsersByRoleId(id), OK);
     }
 
     @Override
     public ResponseEntity<Role> getRoleById(Integer id) {
+        log.info("Request for role by id (role od = " + id + ")");
         return new ResponseEntity<>(roleService.getRoleById(id), OK);
     }
 

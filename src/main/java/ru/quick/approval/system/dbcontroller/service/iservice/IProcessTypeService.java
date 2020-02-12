@@ -4,7 +4,7 @@ import ru.quick.approval.system.api.model.ProcessType;
 
 import java.util.List;
 
-public interface IProcessType {
+public interface IProcessTypeService {
 
     /**
      * Возвращает все ProcessTypes

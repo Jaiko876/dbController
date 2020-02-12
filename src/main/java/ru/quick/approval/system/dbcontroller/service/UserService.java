@@ -218,4 +218,19 @@ public class UserService implements IUserService {
         UserQasRecord userQasRecord = userDao.getUserByLogin(authData.getLogin());
         return userQasRecord.getPassword() == authData.getPassword();
     }
+
+    @Override
+    public List<Task> getTasksByTelegramId(Integer telegramId) {
+        List<UserQasRecord> users = userDao.getAllUsers();
+        UserQasRecord user = users.stream().filter(tmp -> tmp.getTelegramChatId() == telegramId).findFirst().get();
+        List<TaskRecord> tasks = taskDao.getAllTasks();
+        List<Task> answer = new ArrayList<>();
+        for (TaskRecord tmp : tasks){
+            if (tmp.getUserPerformerId() == user.getIdUser()){
+                answer.add(taskTranslator.translate(tmp));
+            }
+        }
+        return answer;
+    }
+
 }

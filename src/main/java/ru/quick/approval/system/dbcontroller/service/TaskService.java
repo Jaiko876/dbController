@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.Task;
 import ru.quick.approval.system.dbcontroller.dao.StatusDao;
 import ru.quick.approval.system.dbcontroller.dao.TaskDao;
+import ru.quick.approval.system.dbcontroller.dao.iDao.IStatusDao;
+import ru.quick.approval.system.dbcontroller.dao.iDao.ITaskDao;
 import ru.quick.approval.system.dbcontroller.service.iservice.ITaskService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
@@ -21,14 +23,14 @@ import java.util.List;
 @Service
 public class TaskService implements ITaskService {
 
-    private final TaskDao taskDao;
-    private final StatusDao statusDao;
+    private final ITaskDao taskDao;
+    private final IStatusDao statusDao;
 
     private final ITranslator<TaskRecord, Task> taskTranslator;
 
 
     @Autowired
-    private TaskService(TaskDao taskDao, StatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator) {
+    public TaskService(ITaskDao taskDao, IStatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator) {
         this.taskTranslator = taskTranslator;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
