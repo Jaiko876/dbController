@@ -24,6 +24,13 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+ * Класс для тестирования большей части методов класса UserService
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
  * @author Kirill Mikheev
  * @version 1.0
  */
@@ -183,10 +190,12 @@ public class UsersServiceTest {
     public void getTasksByTelegramIdTest() {
         doReturn(userMockList).when(userDao).getAllUsers();
         doReturn(taskMockList).when(taskDao).getAllTasks();
-        List<Task> answ = userService.getTasksByTelegramId(1);
-        assertEquals(taskMockList.size(), answ.size());
-        for (int i = 0; i < answ.size(); i++) {
-            assertEquals(taskMockList.get(i).getIdTask(), answ.get(i).getIdTask());
-        }
+        StatusRecord statusRecord = mock(StatusRecord.class);
+        doReturn(1).when(statusRecord).getIdStatus();
+        doReturn(statusRecord).when(statusDao).getStatusByName("active");
+        List<Task> answ = userService.getActiveTasksByTelegramId(1);
+        assertEquals(1, answ.size());
+        assertEquals(taskMockList.get(0).getIdTask(), answ.get(0).getIdTask());
+
     }
 }

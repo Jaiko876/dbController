@@ -14,6 +14,7 @@ import ru.quick.approval.system.dbcontroller.dao.TaskDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IProcessDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IStatusDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.ITaskDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.IProcessService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
@@ -35,13 +36,16 @@ public class ProcessService implements IProcessService {
     private final ITranslator<TaskRecord, Task> taskTranslator;
     private final ITranslator<ProcessRecord, Process> processTranslator;
 
+    private final IProcessCurator processCurator;
+
     @Autowired
-    public ProcessService(IProcessDao processDao, ITaskDao taskDao, IStatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator, ITranslator<ProcessRecord, Process> processTranslator) {
+    public ProcessService(IProcessCurator processCurator, IProcessDao processDao, ITaskDao taskDao, IStatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator, ITranslator<ProcessRecord, Process> processTranslator) {
         this.processDao = processDao;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
         this.processTranslator = processTranslator;
         this.taskTranslator = taskTranslator;
+        this.processCurator = processCurator;
     }
 
     /**
@@ -117,7 +121,7 @@ public class ProcessService implements IProcessService {
     public boolean createNewTaskByUserId(int process_id, int user_id, Task task) {
         task.setProcessId(process_id);
         task.setUserPerformerId(user_id);
-        return taskDao.addTask(taskTranslator.reverseTranslate(task));
+        return taskDao.addTask(taskTranslator.reverseTranslate(task)) != 0;
     }
 
     /**
@@ -131,7 +135,7 @@ public class ProcessService implements IProcessService {
     public boolean createNewTaskByRoleId(int process_id, int role_id, Task task) {
         task.setProcessId(process_id);
         task.setRolePerformerId(role_id);
-        return taskDao.addTask(taskTranslator.reverseTranslate(task));
+        return taskDao.addTask(taskTranslator.reverseTranslate(task)) != 0;
     }
 
     /**
@@ -143,7 +147,8 @@ public class ProcessService implements IProcessService {
     @Override
     public boolean createNewProcessByProcessType(int process_type_id, Process process) {
         process.setProcessTypeId(process_type_id);
-        return processDao.addProcess(processTranslator.reverseTranslate(process));
+        boolean answ = processCurator.createProcess(process_type_id, process);
+        return answ;
     }
 
     /**

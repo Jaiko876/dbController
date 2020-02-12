@@ -25,8 +25,8 @@ paths:
     get:
       tags:
         - user
-      description: все задачи пользователя с заданным telegramId
-      operationId: getTasksByTelegramId
+      description: все активные задачи пользователя с заданным telegramId
+      operationId: getActiveTasksByTelegramId
       parameters:
         - name: telegramId
           in: query

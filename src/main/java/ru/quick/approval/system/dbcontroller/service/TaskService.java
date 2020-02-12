@@ -9,6 +9,7 @@ import ru.quick.approval.system.dbcontroller.dao.StatusDao;
 import ru.quick.approval.system.dbcontroller.dao.TaskDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IStatusDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.ITaskDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.ITaskService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
@@ -28,12 +29,15 @@ public class TaskService implements ITaskService {
 
     private final ITranslator<TaskRecord, Task> taskTranslator;
 
+    private final IProcessCurator processCurator;
+
 
     @Autowired
-    public TaskService(ITaskDao taskDao, IStatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator) {
+    public TaskService(IProcessCurator processCurator, ITaskDao taskDao, IStatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator) {
         this.taskTranslator = taskTranslator;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
+        this.processCurator = processCurator;
     }
 
     /**
@@ -94,7 +98,11 @@ public class TaskService implements ITaskService {
         Task task = taskTranslator.translate(taskDao.getTaskById(id));
         StatusRecord statusRecord = statusDao.getStatusByName("Agreed");
         task.setStatusId(statusRecord.getIdStatus());
-        return updateTaskById(id, task);
+        boolean answ = updateTaskById(id, task);
+        if(answ) {
+            processCurator.agreeTask(id);
+        }
+        return answ;
     }
 
     /**

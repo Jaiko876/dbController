@@ -92,9 +92,9 @@ public interface IUserService {
     boolean login(InlineObject authData);
 
     /**
-     * Возвращает список всех задач пользователя с заданным телеграм айди
+     * Возвращает список всех активных задач пользователя с заданным телеграм айди
      * @param telegramId
      * @return List<Task>
      */
-    List<Task> getTasksByTelegramId(Integer telegramId);
+    List<Task> getActiveTasksByTelegramId(Integer telegramId);
 }

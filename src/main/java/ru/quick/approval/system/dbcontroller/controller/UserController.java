@@ -126,7 +126,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<List<Task>> getTasksByTelegramId(Integer telegramId) {
-        return new ResponseEntity<>(userService.getTasksByTelegramId(telegramId), OK);
+    public ResponseEntity<List<Task>> getActiveTasksByTelegramId(Integer telegramId) {
+        return new ResponseEntity<>(userService.getActiveTasksByTelegramId(telegramId), OK);
     }
 }

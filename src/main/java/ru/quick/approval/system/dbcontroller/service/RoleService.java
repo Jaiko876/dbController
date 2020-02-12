@@ -77,7 +77,7 @@ public class RoleService implements IRoleService {
         List<UserWithoutPassword> answer = new ArrayList<>();
         List<UserRoleRecord> records = userRoleDao.getAllUserRoles();
         for(UserRoleRecord tmp : records){
-            if(tmp.getRoleId() == id){
+            if(tmp.getRoleId().compareTo(id) == 0){
                 answer.add(userWithoutPasswordTranslator.translate(userDao.getUserById(tmp.getUserId())));
             }
         }

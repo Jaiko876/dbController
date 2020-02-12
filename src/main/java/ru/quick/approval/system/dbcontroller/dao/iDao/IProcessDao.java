@@ -20,5 +20,7 @@ public interface IProcessDao {
 
     boolean updateProcessById(int id, ProcessRecord newProcess);
 
-    boolean addProcess(ProcessRecord newProcess);
+    int addProcess(ProcessRecord newProcess);
+
+    ProcessRecord getProcessByName(String name);
 }

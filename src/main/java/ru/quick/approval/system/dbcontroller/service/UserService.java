@@ -128,7 +128,7 @@ public class UserService implements IUserService {
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
-            if((tmp.getStatusId() == active.getIdStatus() || tmp.getStatusId() == sended.getIdStatus()) && tmp.getUserPerformerId() == id){
+            if((tmp.getStatusId().compareTo(active.getIdStatus()) == 0 || tmp.getStatusId().compareTo(sended.getIdStatus()) == 0) && tmp.getUserPerformerId().compareTo(id) == 0) {
                 Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
@@ -149,7 +149,7 @@ public class UserService implements IUserService {
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
-            if((tmp.getStatusId() == agreed.getIdStatus() || tmp.getStatusId() == denied.getIdStatus()) && tmp.getUserPerformerId() == id){
+            if((tmp.getStatusId().compareTo(agreed.getIdStatus()) == 0 || tmp.getStatusId().compareTo(denied.getIdStatus()) == 0) && tmp.getUserPerformerId().compareTo(id) == 0) {
                 Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
@@ -169,7 +169,7 @@ public class UserService implements IUserService {
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
-            if(tmp.getStatusId() == statusRecord.getIdStatus() && tmp.getUserPerformerId() == id){
+            if(tmp.getStatusId().compareTo(statusRecord.getIdStatus()) == 0 && tmp.getUserPerformerId().compareTo(id) == 0){
                 Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
@@ -188,7 +188,7 @@ public class UserService implements IUserService {
         List<TaskRecord> taskRecords = taskDao.getAllTasks();
         List<Task> tasks = new ArrayList<>();
         for(TaskRecord tmp : taskRecords){
-            if(tmp.getUserPerformerId() == id){
+            if(tmp.getUserPerformerId().compareTo(id) == 0) {
                 Task task = taskTranslator.translate(tmp);
                 tasks.add(task);
             }
@@ -205,28 +205,40 @@ public class UserService implements IUserService {
     public List<Role> getRoleListOfUserById(Integer id) {
         List<UserRoleRecord> userRoleRecords = userRoleDao.getAllUserRoles();
         List<Role> roles = new ArrayList<>();
-        for(UserRoleRecord tmp : userRoleRecords){
-            if(tmp.getUserId() == id){
+        for(UserRoleRecord tmp : userRoleRecords) {
+            if(tmp.getUserId().compareTo(id) == 0) {
                 roles.add(roleTranslator.translate(roleDao.getRoleById(tmp.getRoleId())));
             }
         }
         return roles;
     }
 
+    /**
+     * Сверяет пришедшие данные для авторизации с данными из базы
+     * @param authData объект содержит логин пользователя и его пароль
+     * @return true, если все прошло успешно, иначе false
+     */
     @Override
     public boolean login(InlineObject authData) {
         UserQasRecord userQasRecord = userDao.getUserByLogin(authData.getLogin());
-        return userQasRecord.getPassword() == authData.getPassword();
+        return userQasRecord.getPassword().compareTo(authData.getPassword()) == 0;
     }
 
+    /**
+     * Возвращает список всех активных задач пользователя с заданным телеграм айди
+     * @param telegramId
+     * @return List<Task>
+     *
+     */
     @Override
-    public List<Task> getTasksByTelegramId(Integer telegramId) {
+    public List<Task> getActiveTasksByTelegramId(Integer telegramId) {
         List<UserQasRecord> users = userDao.getAllUsers();
-        UserQasRecord user = users.stream().filter(tmp -> tmp.getTelegramChatId() == telegramId).findFirst().get();
+        UserQasRecord user = users.stream().filter(tmp -> tmp.getTelegramChatId().compareTo(telegramId) == 0).findFirst().get();
         List<TaskRecord> tasks = taskDao.getAllTasks();
         List<Task> answer = new ArrayList<>();
+        Integer activeStatusId = statusDao.getStatusByName("active").getIdStatus();
         for (TaskRecord tmp : tasks){
-            if (tmp.getUserPerformerId() == user.getIdUser()){
+            if (tmp.getUserPerformerId().compareTo(user.getIdUser()) == 0 && tmp.getStatusId().compareTo(activeStatusId) == 0){
                 answer.add(taskTranslator.translate(tmp));
             }
         }
