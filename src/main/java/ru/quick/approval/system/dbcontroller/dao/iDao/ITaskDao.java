@@ -20,5 +20,5 @@ public interface ITaskDao {
 
     boolean updateTaskById(int id, TaskRecord newTask);
 
-    boolean addTask(TaskRecord newTask);
+    int addTask(TaskRecord newTask);
 }

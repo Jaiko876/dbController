@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import ru.quick.approval.system.api.model.Task;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IStatusDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.ITaskDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.ITaskService;
 import ru.quick.approval.system.dbcontroller.translator.TaskTranslator;
 
@@ -37,7 +38,9 @@ public class TaskServiceTest {
     @BeforeEach
     public void init() {
         initMocks(this);
-        taskService = new TaskService(taskDao, statusDao, new TaskTranslator());
+        //TODO: Костыль, убери потом
+        IProcessCurator processCurator = mock(ProcessCurator.class);
+        taskService = new TaskService(processCurator, taskDao, statusDao, new TaskTranslator());
         taskMockList = new ArrayList<>();
         TaskRecord task;
         for (int i = 1; i <= 2; i++) {

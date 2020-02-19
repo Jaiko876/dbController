@@ -13,6 +13,7 @@ import ru.quick.approval.system.api.model.Task;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IProcessDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.IStatusDao;
 import ru.quick.approval.system.dbcontroller.dao.iDao.ITaskDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.IProcessService;
 import ru.quick.approval.system.dbcontroller.translator.ProcessTranslator;
 import ru.quick.approval.system.dbcontroller.translator.TaskTranslator;
@@ -54,7 +55,9 @@ public class ProcessServiceTest {
     @BeforeEach
     public void init() {
         initMocks(this);
-        processService = new ProcessService(processDao, taskDao, statusDao, new TaskTranslator(), new ProcessTranslator());
+        //TODO: Костыль, убери потом
+        IProcessCurator processCurator = mock(ProcessCurator.class);
+        processService = new ProcessService(processCurator, processDao, taskDao, statusDao, new TaskTranslator(), new ProcessTranslator());
         processMockList = new ArrayList<>();
         taskMockList = new ArrayList<>();
         ProcessRecord process;
