@@ -1049,7 +1049,6 @@ components:
     User:
       type: object
       required:
-        - id_user
         - fio
         - login
         - password
@@ -1072,7 +1071,6 @@ components:
     UserWithoutPassword:
       type: object
       required:
-        - id_user
         - fio
         - login
         - email
@@ -1088,29 +1086,21 @@ components:
           type: string
         telegram_chat_id:
           type: integer
-
     Role:
       type: object
       required:
-        - id_role
         - name
       properties:
         id_role:
           type: integer
         name:
           type: string
-
     Task:
       type: object
       required:
-        - id_task
-        - process_id
         - user_performer_id
         - role_performer_id
-        - date_start
         - date_end_planning
-        - date_end_fact
-        - status_id
       properties:
         id_task:
           type: integer
@@ -1132,7 +1122,6 @@ components:
     Process_Type:
       type: object
       required:
-        - id_process_type
         - name
         - description
         - time_to_do
@@ -1149,7 +1138,6 @@ components:
     Process_Stage:
       type: object
       required:
-        - id_process_stage
         - process_type_id
         - stage
         - role_id
@@ -1162,7 +1150,6 @@ components:
           type: integer
         role_id:
           type: integer
-
     Status_Type:
       type: string
       enum:
@@ -1172,19 +1159,13 @@ components:
         - agreed
         - denied
         - canceled
-
     Process:
       type: object
       required:
-        - id_process
-        - process_type_id
         - name
         - description
         - user_start_id
-        - date_start
         - date_end_planning
-        - date_end_fact
-        - status_id
       properties:
         id_process:
           type: integer
@@ -1204,7 +1185,6 @@ components:
           $ref: '#/components/schemas/Timestamp'
         status_id:
           type: integer
-
     Timestamp:
       type: object
       required:
@@ -1245,7 +1225,6 @@ components:
         year:
           type: integer
           format: int32
-
     Error:
       type: object
       required:

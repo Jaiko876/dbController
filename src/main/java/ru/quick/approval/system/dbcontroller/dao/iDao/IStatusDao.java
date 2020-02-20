@@ -20,5 +20,5 @@ public interface IStatusDao {
 
     boolean updateStatusById(int id, StatusRecord newStatus);
 
-    boolean addStatus(StatusRecord newStatus);
+    int addStatus(StatusRecord newStatus);
 }

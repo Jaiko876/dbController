@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.records.StatusRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,11 +82,11 @@ public class StatusDao implements IStatusDao {
     /**
      * Добавляет новый статус
      * @param newStatus
-     * @return true, если все прошло успешно, иначе false
+     * @return id нового статуаа
      */
     @Override
-    public boolean addStatus(StatusRecord newStatus) {
-        int response = dslContext.insertInto(STATUS, STATUS.NAME).values(newStatus.getName()).execute();
-        return response != 0;
+    public int addStatus(StatusRecord newStatus) {
+        Record record = dslContext.insertInto(STATUS, STATUS.NAME).values(newStatus.getName()).returning(STATUS.ID_STATUS).fetchOne();
+        return record.getValue(STATUS.ID_STATUS);
     }
 }

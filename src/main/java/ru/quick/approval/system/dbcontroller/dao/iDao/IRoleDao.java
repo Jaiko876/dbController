@@ -20,6 +20,6 @@ public interface IRoleDao {
 
     boolean updateRoleById(int id, RoleQasRecord newRole);
 
-    boolean addRole(RoleQasRecord newRole);
+    int addRole(RoleQasRecord newRole);
 
 }

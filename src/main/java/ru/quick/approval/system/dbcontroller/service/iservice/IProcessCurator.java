@@ -23,4 +23,10 @@ public interface IProcessCurator {
      * @param taskId айди задачи
      */
     void agreeTask(Integer taskId);
+
+    /**
+     * Здесь происходит логика, которая должна быть выполнена после отклонения задачи одним из пользователей
+     * @param processId айди процесса, к которому относилаь задача
+     */
+    void deniedTask(Integer processId);
 }

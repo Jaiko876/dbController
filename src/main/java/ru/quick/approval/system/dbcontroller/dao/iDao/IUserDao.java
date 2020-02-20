@@ -20,5 +20,5 @@ public interface IUserDao {
 
     boolean updateUserById(int id, UserQasRecord newUser);
 
-    boolean addUser(UserQasRecord newUser);
+    int addUser(UserQasRecord newUser);
 }

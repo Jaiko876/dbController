@@ -16,6 +16,8 @@ import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.IRoleService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -83,7 +85,9 @@ public class ProcessCurator implements IProcessCurator {
     public boolean createProcess(Integer processTypeId, Process process) {
         process.setProcessTypeId(processTypeId);
         process.statusId(statusDao.getStatusByName("active").getIdStatus());
+        process.setDateStart(Timestamp.valueOf(LocalDateTime.now()));
         int idProcess = processDao.addProcess(processTranslator.reverseTranslate(process));
+        log.info("Процесс с id = " + idProcess + " создан");
         process.setIdProcess(idProcess);
         List<ProcessStage> stages = getAllStagesOfProcessType(processTypeId);
         // Поиск минимального уровня, с которого нужно начать
@@ -110,6 +114,7 @@ public class ProcessCurator implements IProcessCurator {
     @Override
     public void agreeTask(Integer taskId) {
         Task task = taskTranslator.translate(taskDao.getTaskById(taskId));
+        log.info("Задача с id = " + taskId + " одобрена");
         // Проверка на удачну завершенность процесса
         if(isAllStagesComplete(task.getProcessId())){
             processComplete(task.getProcessId());
@@ -139,6 +144,26 @@ public class ProcessCurator implements IProcessCurator {
             }
         }
         processComplete(task.getProcessId());
+    }
+
+    /**
+     * Здесь происходит логика, которая должна быть выполнена после отклонения задачи одним из пользователей
+     * @param processId айди процесса, к которому относилаь задача
+     */
+    @Override
+    public void deniedTask(Integer processId) {
+        log.info("Процесс с id = " + processId + " отклонен");
+        Integer deniedId = statusDao.getStatusByName("Denied").getIdStatus();
+        ProcessRecord process = processDao.getProcessById(processId);
+        process.setStatusId(deniedId);
+        processDao.updateProcessById(processId, process);
+        List<TaskRecord> tasks = taskDao.getAllTasks();
+        for(TaskRecord tmp : tasks) {
+            if(tmp.getProcessId().compareTo(processId) == 0) {
+                tmp.setStatusId(deniedId);
+                taskDao.updateTaskById(tmp.getIdTask(), tmp);
+            }
+        }
     }
 
     /**
@@ -177,13 +202,12 @@ public class ProcessCurator implements IProcessCurator {
             task.setUserPerformerId(tmp.getIdUser());
             task.setRolePerformerId(roleId);
             task.setDateStart(process.getDateStart());
-            task.setDateEndFact(process.getDateEndFact());
             task.setDateEndPlanning(process.getDateEndPlanning());
             task.setStatusId(statusDao.getStatusByName("sended").getIdStatus());
 
             // Добавление задачи в бд
             int taskId = taskDao.addTask(taskTranslator.reverseTranslate(task));
-
+            log.info("Задача с id = " + taskId + " добавлена к процессу с id = " + process.getIdProcess());
             // Заполнение объекта для отправки в TaskInfo
             TaskTransferObject taskTransferObject = new TaskTransferObject(
                     tmp.getTelegramChatId(),
@@ -262,15 +286,11 @@ public class ProcessCurator implements IProcessCurator {
      * @param processId айди процесса
      */
     private void processComplete(Integer processId) {
-        log.info("Процесс с id = " + processId + "завершен");
-    }
-
-    /**
-     * Выполнение всех завершающих этапов при отклонении процесса
-     * @param processId айди процесса
-     */
-    private void processDenied(Integer processId) {
-        log.info("Процесс с id = " + processId + "отклонен");
+        log.info("Процесс с id = " + processId + " завершен");
+        ProcessRecord proess = processDao.getProcessById(processId);
+        proess.setDateEndFact(Timestamp.valueOf(LocalDateTime.now()));
+        proess.setStatusId(statusDao.getStatusByName("agreed").getIdStatus());
+        processDao.updateProcessById(processId, proess);
     }
 }
 
