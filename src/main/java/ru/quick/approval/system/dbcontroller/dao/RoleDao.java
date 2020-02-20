@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.records.RoleQasRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +80,12 @@ public class RoleDao implements IRoleDao {
     /**
      * Добавляет новую роль
      * @param newRole
-     * @return true, если все прошло успешно, иначе false
+     * @return id новой роли
      */
     @Override
-    public boolean addRole(RoleQasRecord newRole) {
-        int response = dslContext.insertInto(ROLE_QAS, ROLE_QAS.NAME).values(newRole.getName()).execute();
-        return response != 0;
+    public int addRole(RoleQasRecord newRole) {
+        Record record = dslContext.insertInto(ROLE_QAS, ROLE_QAS.NAME).values(newRole.getName()).returning(ROLE_QAS.ID_ROLE).fetchOne();
+        return record.getValue(ROLE_QAS.ID_ROLE);
     }
 
 

@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.records.TaskRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,24 +92,13 @@ public class TaskDao implements ITaskDao {
      */
     @Override
     public int addTask(TaskRecord newTask) {
-        dslContext.insertInto(
+        Record record = dslContext.insertInto(
                 TASK, TASK.PROCESS_ID, TASK.USER_PERFORMER_ID, TASK.ROLE_PERFORMER_ID,
                 TASK.DATE_START, TASK.DATE_END_PLANNING, TASK.DATE_END_FACT, TASK.STATUS_ID)
                 .values(newTask.getProcessId(), newTask.getUserPerformerId(), newTask.getRolePerformerId(),
                         newTask.getDateStart(), newTask.getDateEndPlanning(),
                         newTask.getDateEndFact(), newTask.getStatusId())
-                .execute();
-        TaskRecord task = dslContext.selectFrom(TASK)
-                .where(TASK.PROCESS_ID.eq(newTask.getProcessId())
-                        .and(TASK.USER_PERFORMER_ID.eq(newTask.getUserPerformerId()))
-                        .and(TASK.ROLE_PERFORMER_ID.eq(newTask.getRolePerformerId()))
-                        .and(TASK.DATE_START.eq(newTask.getDateStart()))
-                        .and(TASK.DATE_END_PLANNING.eq(newTask.getDateEndPlanning()))
-                        .and(TASK.DATE_END_FACT.eq(newTask.getDateEndFact()))
-                        .and(TASK.STATUS_ID.eq(newTask.getStatusId()))
-                )
-                .fetchAny();
-
-        return task.getIdTask();
+                .returning(TASK.ID_TASK).fetchOne();
+        return record.getValue(TASK.ID_TASK);
     }
 }

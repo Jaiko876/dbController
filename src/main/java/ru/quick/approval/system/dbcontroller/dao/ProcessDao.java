@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.records.ProcessRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,20 +95,14 @@ public class ProcessDao implements IProcessDao {
      */
     @Override
     public int addProcess(ProcessRecord newProcess) {
-        dslContext.insertInto(
+        Record record = dslContext.insertInto(
                 PROCESS, PROCESS.PROCESS_TYPE_ID, PROCESS.NAME, PROCESS.DESCRIPTION, PROCESS.USER_START_ID,
                 PROCESS.DATE_START, PROCESS.DATE_END_PLANNING, PROCESS.DATE_END_FACT, PROCESS.STATUS_ID)
                 .values(newProcess.getProcessTypeId(), newProcess.getName(), newProcess.getDescription(),
                 newProcess.getUserStartId(), newProcess.getDateStart(), newProcess.getDateEndPlanning(),
-                newProcess.getDateEndFact(), newProcess.getStatusId())
-                .execute();
-        ProcessRecord record = dslContext.selectFrom(PROCESS)
-                .where(PROCESS.PROCESS_TYPE_ID.eq(newProcess.getProcessTypeId())
-                        .and(PROCESS.NAME.eq(newProcess.getName()))
-                        .and(PROCESS.DESCRIPTION.eq(newProcess.getDescription()))
-                        .and(PROCESS.USER_START_ID.eq(newProcess.getUserStartId())))
-                .fetchAny();
-        return record.getIdProcess();
+                newProcess.getDateEndFact(), newProcess.getStatusId()).returning(PROCESS.ID_PROCESS)
+                .fetchOne();
+        return record.getValue(PROCESS.ID_PROCESS);
     }
 
     @Override

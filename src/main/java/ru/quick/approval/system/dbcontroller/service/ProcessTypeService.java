@@ -50,7 +50,7 @@ public class ProcessTypeService implements IProcessTypeService {
      */
     @Override
     public boolean createNewProcessType(ProcessType processType) {
-        return processTypeDao.addProcessType(processTypeTranslator.reverseTranslate(processType));
+        return processTypeDao.addProcessType(processTypeTranslator.reverseTranslate(processType)) != 0;
     }
 
     /**

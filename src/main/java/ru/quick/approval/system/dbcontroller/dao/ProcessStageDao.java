@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.records.ProcessStageRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,14 +74,14 @@ public class ProcessStageDao implements IProcessStageDao {
     /**
      * Добавляет новый этап процесса
      * @param newProcessStage
-     * @return true, если все прошло успешно, иначе false
+     * @return id нового этапа
      */
     @Override
-    public boolean addProcessStage(ProcessStageRecord newProcessStage) {
-        int response = dslContext.insertInto(
+    public int addProcessStage(ProcessStageRecord newProcessStage) {
+        Record record = dslContext.insertInto(
                 PROCESS_STAGE, PROCESS_STAGE.PROCESS_TYPE_ID, PROCESS_STAGE.STAGE, PROCESS_STAGE.ROLE_ID)
                 .values(newProcessStage.getProcessTypeId(), newProcessStage.getStage(), newProcessStage.getRoleId())
-                .execute();
-        return response != 0;
+                .returning(PROCESS_STAGE.ID_PROCESS_STAGE).fetchOne();
+        return record.getValue(PROCESS_STAGE.ID_PROCESS_STAGE);
     }
 }

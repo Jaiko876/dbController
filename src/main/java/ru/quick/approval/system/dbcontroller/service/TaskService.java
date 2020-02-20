@@ -13,6 +13,8 @@ import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.ITaskService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,9 +85,14 @@ public class TaskService implements ITaskService {
     @Override
     public boolean updateTaskByIdSended(int id) {
         Task task = taskTranslator.translate(taskDao.getTaskById(id));
-        StatusRecord statusRecord = statusDao.getStatusByName("Sended");
-        task.setStatusId(statusRecord.getIdStatus());
-        return updateTaskById(id, task);
+        Integer activeId = statusDao.getStatusByName("active").getIdStatus();
+        Integer waitId = statusDao.getStatusByName("wait").getIdStatus();
+        if(task.getStatusId().compareTo(activeId) == 0 || task.getStatusId().compareTo(waitId) == 0) {
+            StatusRecord statusRecord = statusDao.getStatusByName("Sended");
+            task.setStatusId(statusRecord.getIdStatus());
+            return updateTaskById(id, task);
+        }
+        return false;
     }
 
     /**
@@ -96,13 +103,18 @@ public class TaskService implements ITaskService {
     @Override
     public boolean updateTaskByIdAgreed(int id) {
         Task task = taskTranslator.translate(taskDao.getTaskById(id));
-        StatusRecord statusRecord = statusDao.getStatusByName("Agreed");
-        task.setStatusId(statusRecord.getIdStatus());
-        boolean answ = updateTaskById(id, task);
-        if(answ) {
-            processCurator.agreeTask(id);
+        Integer sendedId = statusDao.getStatusByName("sended").getIdStatus();
+        if(task.getStatusId().compareTo(sendedId) == 0) {
+            StatusRecord statusRecord = statusDao.getStatusByName("Agreed");
+            task.setStatusId(statusRecord.getIdStatus());
+            task.setDateEndFact(Timestamp.valueOf(LocalDateTime.now()));
+            boolean answ = updateTaskById(id, task);
+            if (answ) {
+                processCurator.agreeTask(id);
+            }
+            return answ;
         }
-        return answ;
+        return false;
     }
 
     /**
@@ -113,9 +125,13 @@ public class TaskService implements ITaskService {
     @Override
     public boolean updateTaskByIdActive(int id) {
         Task task = taskTranslator.translate(taskDao.getTaskById(id));
-        StatusRecord statusRecord = statusDao.getStatusByName("Active");
-        task.setStatusId(statusRecord.getIdStatus());
-        return updateTaskById(id, task);
+        Integer canceledId = statusDao.getStatusByName("canceled").getIdStatus();
+        if(task.getStatusId().compareTo(canceledId) == 0) {
+            StatusRecord statusRecord = statusDao.getStatusByName("Active");
+            task.setStatusId(statusRecord.getIdStatus());
+            return updateTaskById(id, task);
+        }
+        return false;
     }
 
     /**
@@ -126,9 +142,15 @@ public class TaskService implements ITaskService {
     @Override
     public boolean updateTaskByIdDenied(int id) {
         Task task = taskTranslator.translate(taskDao.getTaskById(id));
-        StatusRecord statusRecord = statusDao.getStatusByName("Denied");
-        task.setStatusId(statusRecord.getIdStatus());
-        return updateTaskById(id, task);
+        Integer sendedId = statusDao.getStatusByName("sended").getIdStatus();
+        if(task.getStatusId().compareTo(sendedId) == 0) {
+            StatusRecord statusRecord = statusDao.getStatusByName("Denied");
+            task.setStatusId(statusRecord.getIdStatus());
+            task.setDateEndFact(Timestamp.valueOf(LocalDateTime.now()));
+            processCurator.deniedTask(task.getProcessId());
+            return updateTaskById(id, task);
+        }
+        return false;
     }
 
     /**

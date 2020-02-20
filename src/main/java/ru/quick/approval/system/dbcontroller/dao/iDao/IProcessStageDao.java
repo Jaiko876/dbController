@@ -18,5 +18,5 @@ public interface IProcessStageDao {
 
     boolean updateProcessStageById(int id, ProcessStageRecord newProcessStage);
 
-    boolean addProcessStage(ProcessStageRecord newProcessStage);
+    int addProcessStage(ProcessStageRecord newProcessStage);
 }

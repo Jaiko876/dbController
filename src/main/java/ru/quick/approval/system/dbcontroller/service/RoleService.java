@@ -50,7 +50,7 @@ public class RoleService implements IRoleService {
      */
     @Override
     public boolean addRole(Role role) {
-        return roleDao.addRole(roleTranslator.reverseTranslate(role));
+        return roleDao.addRole(roleTranslator.reverseTranslate(role)) != 0;
     }
 
     /**
