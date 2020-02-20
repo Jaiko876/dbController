@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.UserQas;
 import org.jooq.demo.db.tables.records.UserQasRecord;
@@ -80,12 +81,13 @@ public class UserDao implements IUserDao {
     /**
      * Добавляет в аблицу нового пользователя
      * @param newUser
-     * @return true, если все прошло успешно, иначе false
+     * @return id нового пользователя
      */
     @Override
-    public boolean addUser(UserQasRecord newUser) {
-        int response = dslContext.insertInto(USER_QAS, USER_QAS.FIO, USER_QAS.LOGIN, USER_QAS.PASSWORD, USER_QAS.EMAIL, USER_QAS.TELEGRAM_CHAT_ID)
-                .values(newUser.getFio(), newUser.getLogin(), newUser.getPassword(), newUser.getEmail(), newUser.getTelegramChatId()).execute();
-        return response != 0;
+    public int addUser(UserQasRecord newUser) {
+        Record record = dslContext.insertInto(USER_QAS, USER_QAS.FIO, USER_QAS.LOGIN, USER_QAS.PASSWORD, USER_QAS.EMAIL, USER_QAS.TELEGRAM_CHAT_ID)
+                .values(newUser.getFio(), newUser.getLogin(), newUser.getPassword(), newUser.getEmail(), newUser.getTelegramChatId())
+                .returning(USER_QAS.ID_USER).fetchOne();
+        return record.getValue(USER_QAS.ID_USER);
     }
 }

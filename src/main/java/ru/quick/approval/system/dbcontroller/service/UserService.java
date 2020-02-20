@@ -69,7 +69,7 @@ public class UserService implements IUserService {
      */
     @Override
     public boolean addUser(User newUser) {
-        return userDao.addUser(userTranslator.reverseTranslate(newUser));
+        return userDao.addUser(userTranslator.reverseTranslate(newUser)) != 0;
     }
 
     /**
@@ -86,7 +86,7 @@ public class UserService implements IUserService {
             roleDao.addRole(new RoleQasRecord(0, role.getName()));
             roleQasRecord = roleDao.getRoleByName(role.getName());
         }
-        return userRoleDao.addUserRole(new UserRoleRecord(0, id, roleQasRecord.getIdRole()));
+        return userRoleDao.addUserRole(new UserRoleRecord(0, id, roleQasRecord.getIdRole())) != 0;
     }
 
     /**

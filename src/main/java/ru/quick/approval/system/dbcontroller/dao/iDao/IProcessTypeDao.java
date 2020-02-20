@@ -18,6 +18,6 @@ public interface IProcessTypeDao {
 
     boolean updateProcessTypeById(int id, ProcessTypeRecord newProcessType);
 
-    boolean addProcessType(ProcessTypeRecord newProcessType);
+    int addProcessType(ProcessTypeRecord newProcessType);
 
 }

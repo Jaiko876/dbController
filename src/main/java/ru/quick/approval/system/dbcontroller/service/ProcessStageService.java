@@ -63,6 +63,6 @@ public class ProcessStageService implements IProcessStageService {
     @Override
     public boolean addStageByProcessType(int process_type_id, ProcessStage processStage) {
         processStage.setProcessTypeId(process_type_id);
-        return processStageDao.addProcessStage(processStageTranslator.reverseTranslate(processStage));
+        return processStageDao.addProcessStage(processStageTranslator.reverseTranslate(processStage)) != 0;
     }
 }

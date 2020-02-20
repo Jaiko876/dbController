@@ -18,6 +18,6 @@ public interface IUserRoleDao {
 
     boolean updateUserRoleById(int id, UserRoleRecord newUserRole);
 
-    boolean addUserRole(UserRoleRecord newUserRole);
+    int addUserRole(UserRoleRecord newUserRole);
 
 }

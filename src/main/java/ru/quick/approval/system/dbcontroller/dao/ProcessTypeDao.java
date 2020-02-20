@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.dao;
 
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.demo.db.tables.records.ProcessTypeRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,14 +74,14 @@ public class ProcessTypeDao implements IProcessTypeDao {
     /**
      * Добавляет новый тип процесса
      * @param newProcessType
-     * @return true, если все прошло успешно, иначе false
+     * @return id нового этипа процесса
      */
     @Override
-    public boolean addProcessType(ProcessTypeRecord newProcessType) {
-        int response = dslContext.insertInto(
+    public int addProcessType(ProcessTypeRecord newProcessType) {
+        Record record = dslContext.insertInto(
                 PROCESS_TYPE, PROCESS_TYPE.NAME, PROCESS_TYPE.DESCRIPTION, PROCESS_TYPE.TIME_TO_DO)
-                .values(newProcessType.getName(), newProcessType.getDescription(), newProcessType.getTimeToDo())
-                .execute();
-        return response != 0;
+                .values(newProcessType.getName(), newProcessType.getDescription(), newProcessType.getTimeToDo()).
+                returning(PROCESS_TYPE.ID_PROCESS_TYPE).fetchOne();
+        return record.getValue(PROCESS_TYPE.ID_PROCESS_TYPE);
     }
 }
