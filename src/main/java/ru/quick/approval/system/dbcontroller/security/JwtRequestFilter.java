@@ -1,6 +1,5 @@
 package ru.quick.approval.system.dbcontroller.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 public class JwtRequestFilter extends GenericFilterBean {
 
@@ -27,6 +27,8 @@ public class JwtRequestFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        System.out.println(httpServletRequest.getRequestURI());
         final String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
         if (token != null) {
             try {

@@ -90,17 +90,28 @@ public class ProcessDao implements IProcessDao {
     /**
      * Добавляет новый процесс
      * @param newProcess
-     * @return true, если все прошло успено, иначе false
+     * @return id, добавленного процесса
      */
     @Override
-    public boolean addProcess(ProcessRecord newProcess) {
-        int response = dslContext.insertInto(
+    public int addProcess(ProcessRecord newProcess) {
+        dslContext.insertInto(
                 PROCESS, PROCESS.PROCESS_TYPE_ID, PROCESS.NAME, PROCESS.DESCRIPTION, PROCESS.USER_START_ID,
                 PROCESS.DATE_START, PROCESS.DATE_END_PLANNING, PROCESS.DATE_END_FACT, PROCESS.STATUS_ID)
                 .values(newProcess.getProcessTypeId(), newProcess.getName(), newProcess.getDescription(),
                 newProcess.getUserStartId(), newProcess.getDateStart(), newProcess.getDateEndPlanning(),
                 newProcess.getDateEndFact(), newProcess.getStatusId())
                 .execute();
-        return response != 0;
+        ProcessRecord record = dslContext.selectFrom(PROCESS)
+                .where(PROCESS.PROCESS_TYPE_ID.eq(newProcess.getProcessTypeId())
+                        .and(PROCESS.NAME.eq(newProcess.getName()))
+                        .and(PROCESS.DESCRIPTION.eq(newProcess.getDescription()))
+                        .and(PROCESS.USER_START_ID.eq(newProcess.getUserStartId())))
+                .fetchAny();
+        return record.getIdProcess();
+    }
+
+    @Override
+    public ProcessRecord getProcessByName(String name) {
+        return dslContext.selectFrom(PROCESS).where(PROCESS.NAME.eq(name)).fetchAny();
     }
 }

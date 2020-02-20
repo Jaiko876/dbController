@@ -87,17 +87,28 @@ public class TaskDao implements ITaskDao {
     /**
      * Добавляет новую задачу
      * @param newTask
-     * @return true, если все прошло успешно, иначе false
+     * @return id новой задачи
      */
     @Override
-    public boolean addTask(TaskRecord newTask) {
-        int response = dslContext.insertInto(
+    public int addTask(TaskRecord newTask) {
+        dslContext.insertInto(
                 TASK, TASK.PROCESS_ID, TASK.USER_PERFORMER_ID, TASK.ROLE_PERFORMER_ID,
                 TASK.DATE_START, TASK.DATE_END_PLANNING, TASK.DATE_END_FACT, TASK.STATUS_ID)
                 .values(newTask.getProcessId(), newTask.getUserPerformerId(), newTask.getRolePerformerId(),
                         newTask.getDateStart(), newTask.getDateEndPlanning(),
                         newTask.getDateEndFact(), newTask.getStatusId())
                 .execute();
-        return response != 0;
+        TaskRecord task = dslContext.selectFrom(TASK)
+                .where(TASK.PROCESS_ID.eq(newTask.getProcessId())
+                        .and(TASK.USER_PERFORMER_ID.eq(newTask.getUserPerformerId()))
+                        .and(TASK.ROLE_PERFORMER_ID.eq(newTask.getRolePerformerId()))
+                        .and(TASK.DATE_START.eq(newTask.getDateStart()))
+                        .and(TASK.DATE_END_PLANNING.eq(newTask.getDateEndPlanning()))
+                        .and(TASK.DATE_END_FACT.eq(newTask.getDateEndFact()))
+                        .and(TASK.STATUS_ID.eq(newTask.getStatusId()))
+                )
+                .fetchAny();
+
+        return task.getIdTask();
     }
 }

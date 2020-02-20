@@ -21,6 +21,34 @@ tags:
   - name: process_type
     description: запросы блока process_type
 paths:
+  /user/task:
+    get:
+      tags:
+        - user
+      description: все активные задачи пользователя с заданным telegramId
+      operationId: getActiveTasksByTelegramId
+      parameters:
+        - name: telegramId
+          in: query
+          description: id пользователя, задачи которого нужно получить
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: task response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /user:
     get:
       tags:
@@ -89,7 +117,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    patch:
+    post:
       tags:
         - user
       description: обновить данные пользователя
@@ -606,7 +634,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    patch:
+    post:
       tags:
         - process
       description: изменить процесс по выбранному id
@@ -877,7 +905,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    patch:
+    post:
       tags:
         - task
       description: обновить данные по задаче
@@ -906,7 +934,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /task/{id}/status/sended:
-    patch:
+    post:
       tags:
         - task
       description: обновить статус задачи на отправлено
@@ -928,7 +956,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /task/{id}/status/agreed:
-    patch:
+    post:
       tags:
         - task
       description: обновить статус задачи на согласовано
@@ -950,7 +978,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /task/{id}/status/active:
-    patch:
+    post:
       tags:
         - task
       description: обновить статус задачи на активна
@@ -972,7 +1000,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /task/{id}/status/denied:
-    patch:
+    post:
       tags:
         - task
       description: обновить статус задачи на отказано в согласовании
@@ -994,7 +1022,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /task/{id}/status/canceled:
-    patch:
+    post:
       tags:
         - task
       description: обновить статус задачи на отменена
@@ -1018,7 +1046,6 @@ paths:
 
 components:
   schemas:
-
     User:
       type: object
       required:

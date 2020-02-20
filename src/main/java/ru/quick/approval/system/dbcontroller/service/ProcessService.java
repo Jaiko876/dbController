@@ -11,6 +11,10 @@ import ru.quick.approval.system.api.model.Task;
 import ru.quick.approval.system.dbcontroller.dao.ProcessDao;
 import ru.quick.approval.system.dbcontroller.dao.StatusDao;
 import ru.quick.approval.system.dbcontroller.dao.TaskDao;
+import ru.quick.approval.system.dbcontroller.dao.iDao.IProcessDao;
+import ru.quick.approval.system.dbcontroller.dao.iDao.IStatusDao;
+import ru.quick.approval.system.dbcontroller.dao.iDao.ITaskDao;
+import ru.quick.approval.system.dbcontroller.service.iservice.IProcessCurator;
 import ru.quick.approval.system.dbcontroller.service.iservice.IProcessService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
 
@@ -23,22 +27,25 @@ import java.util.List;
  */
 
 @Service
-public class ProcessService  implements IProcessService {
+public class ProcessService implements IProcessService {
 
-    private final ProcessDao processDao;
-    private final TaskDao taskDao;
-    private final StatusDao statusDao;
+    private final IProcessDao processDao;
+    private final ITaskDao taskDao;
+    private final IStatusDao statusDao;
 
     private final ITranslator<TaskRecord, Task> taskTranslator;
     private final ITranslator<ProcessRecord, Process> processTranslator;
 
+    private final IProcessCurator processCurator;
+
     @Autowired
-    private ProcessService(ProcessDao processDao, TaskDao taskDao, StatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator,ITranslator<ProcessRecord, Process> processTranslator) {
+    public ProcessService(IProcessCurator processCurator, IProcessDao processDao, ITaskDao taskDao, IStatusDao statusDao, ITranslator<TaskRecord, Task> taskTranslator, ITranslator<ProcessRecord, Process> processTranslator) {
         this.processDao = processDao;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
         this.processTranslator = processTranslator;
         this.taskTranslator = taskTranslator;
+        this.processCurator = processCurator;
     }
 
     /**
@@ -114,7 +121,7 @@ public class ProcessService  implements IProcessService {
     public boolean createNewTaskByUserId(int process_id, int user_id, Task task) {
         task.setProcessId(process_id);
         task.setUserPerformerId(user_id);
-        return taskDao.addTask(taskTranslator.reverseTranslate(task));
+        return taskDao.addTask(taskTranslator.reverseTranslate(task)) != 0;
     }
 
     /**
@@ -128,7 +135,7 @@ public class ProcessService  implements IProcessService {
     public boolean createNewTaskByRoleId(int process_id, int role_id, Task task) {
         task.setProcessId(process_id);
         task.setRolePerformerId(role_id);
-        return taskDao.addTask(taskTranslator.reverseTranslate(task));
+        return taskDao.addTask(taskTranslator.reverseTranslate(task)) != 0;
     }
 
     /**
@@ -140,7 +147,8 @@ public class ProcessService  implements IProcessService {
     @Override
     public boolean createNewProcessByProcessType(int process_type_id, Process process) {
         process.setProcessTypeId(process_type_id);
-        return processDao.addProcess(processTranslator.reverseTranslate(process));
+        boolean answ = processCurator.createProcess(process_type_id, process);
+        return answ;
     }
 
     /**
@@ -150,8 +158,8 @@ public class ProcessService  implements IProcessService {
     @Override
     public List<Process> getProcessStatusActive() {
         List<Process> processList = new ArrayList<>();
-        List<ProcessRecord> processByStatusId = processDao.getProcessByStatusId
-                (statusDao.getStatusByName("Active").getIdStatus());
+        List<ProcessRecord> processByStatusId = processDao.
+                getProcessByStatusId(statusDao.getStatusByName("Active").getIdStatus());
         for (ProcessRecord processRecord: processByStatusId) {
             processList.add(processTranslator.translate(processRecord));
         }
