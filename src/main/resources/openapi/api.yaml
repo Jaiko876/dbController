@@ -5,6 +5,8 @@ info:
   description: Api для взаимодействия с базой данных
   contact:
     name: Kirill & Igor
+servers:
+  - url: http://localhost:8080/api/v1
 tags:
   - name: user
     description: запросы блока user
@@ -18,8 +20,6 @@ tags:
     description: запросы блока process_stage
   - name: process_type
     description: запросы блока process_type
-servers:
-  - url: localhost:8080/api/v1
 paths:
   /user/task:
     get:

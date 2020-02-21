@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
 import ru.quick.approval.system.api.controller.RoleApi;
 import ru.quick.approval.system.api.model.Role;
-import ru.quick.approval.system.api.model.User;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
 import ru.quick.approval.system.dbcontroller.service.RoleService;
 
