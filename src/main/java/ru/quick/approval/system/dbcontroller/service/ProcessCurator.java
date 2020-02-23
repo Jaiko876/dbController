@@ -135,6 +135,11 @@ public class ProcessCurator implements IProcessCurator {
         for(Integer tmp : stageNumbers) {
             List<Task> tasks = getAllTasksOfProcessStage(process, tmp);
             if(tasks.size() == 0) {
+                for(ProcessStage stage : processStages) {
+                    if(stage.getStage().compareTo(tmp) == 0) {
+                        createTasksByStage(stage, process);
+                    }
+                }
                 return;
             }
             for(Task tmpTask : tasks) {
@@ -265,13 +270,14 @@ public class ProcessCurator implements IProcessCurator {
         // поиск номера последнего этапа подтверждения
         int maxStage = stages.get(0).getStage();
         for(ProcessStage tmp : stages) {
-            if(tmp.getStage().compareTo(maxStage) > 1) {
+            if(tmp.getStage().compareTo(maxStage) > 0) {
                 maxStage = tmp.getStage();
             }
         }
         // Получение всех задач последнего этапа, если список пуст, то значит мы еще не перешли к этому этапу
         List<Task> lastStageTasks = getAllTasksOfProcessStage(process, maxStage);
         if(lastStageTasks.size() == 0) return false;
+
         int agreedStatus = statusDao.getStatusByName("agreed").getIdStatus();
         for(Task tmp : lastStageTasks) {
             if(tmp.getStatusId().compareTo(agreedStatus) != 0) {

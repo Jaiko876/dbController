@@ -4,9 +4,11 @@ import org.jooq.demo.db.tables.records.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.quick.approval.system.api.model.*;
+import ru.quick.approval.system.api.model.Process;
 import ru.quick.approval.system.dbcontroller.dao.iDao.*;
 import ru.quick.approval.system.dbcontroller.service.iservice.IUserService;
 import ru.quick.approval.system.dbcontroller.translator.ITranslator;
+import ru.quick.approval.system.dbcontroller.translator.ProcessTranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,27 +26,32 @@ public class UserService implements IUserService {
     private final IRoleDao roleDao;
     private final ITaskDao taskDao;
     private final IStatusDao statusDao;
+    private final IProcessDao processDao;
     private final IUserRoleDao userRoleDao;
 
     private final ITranslator<TaskRecord, Task> taskTranslator;
     private final ITranslator<RoleQasRecord, Role> roleTranslator;
     private final ITranslator<UserQasRecord, User> userTranslator;
+    private final ITranslator<ProcessRecord, Process> processTranslator;
     private final ITranslator<UserQasRecord, UserWithoutPassword> userWithoutPasswordTranslator;
 
     @Autowired
-    public UserService(IUserDao userDao, IRoleDao roleDao, ITaskDao taskDao, IStatusDao statusDao, IUserRoleDao userRoleDao,
+    public UserService(IUserDao userDao, IRoleDao roleDao, ITaskDao taskDao, IStatusDao statusDao, IUserRoleDao userRoleDao, IProcessDao processDao,
                        ITranslator<UserQasRecord, User> userTranslator,
                        ITranslator<RoleQasRecord, Role> roleTranslator,
                        ITranslator<TaskRecord, Task> taskTranslator,
+                       ProcessTranslator processTranslator,
                        ITranslator<UserQasRecord, UserWithoutPassword> userWithoutPasswordTranslator){
         this.taskTranslator = taskTranslator;
         this.userWithoutPasswordTranslator = userWithoutPasswordTranslator;
         this.userTranslator = userTranslator;
         this.roleTranslator = roleTranslator;
+        this.processTranslator = processTranslator;
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.taskDao = taskDao;
         this.statusDao = statusDao;
+        this.processDao = processDao;
         this.userRoleDao = userRoleDao;
     }
 
@@ -243,6 +250,23 @@ public class UserService implements IUserService {
             }
         }
         return answer;
+    }
+
+    /**
+     * Возвращает список всех процессов данного пользователя
+     * @param id пользователя
+     * @return List<Process>
+     */
+    @Override
+    public List<Process> getProcessesByUserId(Integer id) {
+        List<ProcessRecord> processRecords = processDao.getAllProcesses();
+        List<Process> answ = new ArrayList<>();
+        for(ProcessRecord tmp : processRecords) {
+            if(tmp.getUserStartId().compareTo(id) == 0) {
+                answ.add(processTranslator.translate(tmp));
+            }
+        }
+        return answ;
     }
 
 }

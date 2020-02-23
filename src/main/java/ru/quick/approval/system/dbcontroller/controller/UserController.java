@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.quick.approval.system.api.controller.UserApi;
 import ru.quick.approval.system.api.model.*;
+import ru.quick.approval.system.api.model.Process;
 import ru.quick.approval.system.dbcontroller.service.iservice.IUserService;
 
 import javax.validation.Valid;
@@ -128,5 +129,10 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<List<Task>> getActiveTasksByTelegramId(Integer telegramId) {
         return new ResponseEntity<>(userService.getActiveTasksByTelegramId(telegramId), OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Process>> getProcessesByUserId(Integer id) {
+        return new ResponseEntity<>(userService.getProcessesByUserId(id), OK);
     }
 }
