@@ -97,11 +97,9 @@ public class ProcessCurator implements IProcessCurator {
                 minStage = stage.getStage();
             }
         }
-        log.info("min stage = " + minStage);
         // Создание задач по всем этапам минимального уровня
         for(ProcessStage stage : stages) {
             if(stage.getStage().compareTo(minStage) == 0) {
-                log.info("" + stage.getStage());
                 createTasksByStage(stage, process);
             }
         }
@@ -136,9 +134,12 @@ public class ProcessCurator implements IProcessCurator {
         Process process = processTranslator.translate(processDao.getProcessById(task.getProcessId()));
         for(Integer tmp : stageNumbers) {
             List<Task> tasks = getAllTasksOfProcessStage(process, tmp);
-            log.info("" + tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp+ tmp);
             if(tasks.size() == 0) {
-                createTasksByStage(processStageTranslator.translate(processStageDao.getProcessStageById( tmp)),process);
+                for(ProcessStage stage : processStages) {
+                    if(stage.getStage().compareTo(tmp) == 0) {
+                        createTasksByStage(stage, process);
+                    }
+                }
                 return;
             }
             for(Task tmpTask : tasks) {
@@ -243,7 +244,6 @@ public class ProcessCurator implements IProcessCurator {
                 processStages.add(tmp);
             }
         }
-        log.info("ProcessStages = " + processStages.size());
         // Поиск задач
         search:
         for(TaskRecord tmp : taskRecords) {
@@ -274,21 +274,16 @@ public class ProcessCurator implements IProcessCurator {
                 maxStage = tmp.getStage();
             }
         }
-        log.info("maxStage = " + maxStage);
         // Получение всех задач последнего этапа, если список пуст, то значит мы еще не перешли к этому этапу
         List<Task> lastStageTasks = getAllTasksOfProcessStage(process, maxStage);
-        log.info("Еще не вернул фолс");
         if(lastStageTasks.size() == 0) return false;
 
-        log.info("last stage size =  " + lastStageTasks.size() + " / " + lastStageTasks.get(0).getIdTask());
         int agreedStatus = statusDao.getStatusByName("agreed").getIdStatus();
         for(Task tmp : lastStageTasks) {
-            log.info("все ще не вернул фолс " + tmp.getIdTask());
             if(tmp.getStatusId().compareTo(agreedStatus) != 0) {
                 return false;
             }
         }
-        log.info("Собсна тру");
         return true;
     }
 
