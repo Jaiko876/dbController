@@ -1,6 +1,7 @@
 package ru.quick.approval.system.dbcontroller.service.iservice;
 
 import ru.quick.approval.system.api.model.*;
+import ru.quick.approval.system.api.model.Process;
 
 import java.util.List;
 
@@ -97,4 +98,11 @@ public interface IUserService {
      * @return List<Task>
      */
     List<Task> getActiveTasksByTelegramId(Integer telegramId);
+
+    /**
+     * Возвращает список всех процессов данного пользователя
+     * @param id пользователя
+     * @return List<Process>
+     */
+    List<Process> getProcessesByUserId(Integer id);
 }
