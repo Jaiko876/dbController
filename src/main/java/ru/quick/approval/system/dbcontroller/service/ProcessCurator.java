@@ -226,7 +226,7 @@ public class ProcessCurator implements IProcessCurator {
 
             // Заполнение запроса на оповещение пользователя
             RestTemplate template = new RestTemplate();
-            //ResponseEntity<Void> responseEntity = template.postForEntity(TASK_INFO_MESSAGE_URL, taskTransferObject, Void.class);
+            ResponseEntity<Void> responseEntity = template.postForEntity(TASK_INFO_MESSAGE_URL, taskTransferObject, Void.class);
         }
     }
 
