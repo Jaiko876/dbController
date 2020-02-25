@@ -91,6 +91,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /user/process/{id}:
+    get:
+      tags:
+        - user
+      description: все процессы данного пользователя
+      operationId: getProcessesByUserId
+      parameters:
+        - name: id
+          in: path
+          description: id пользователя, процессы которого нужно получить
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: process response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Process'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /user/{id}:
     get:
       tags:

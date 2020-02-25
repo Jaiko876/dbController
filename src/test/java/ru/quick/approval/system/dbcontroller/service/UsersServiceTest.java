@@ -10,10 +10,7 @@ import ru.quick.approval.system.api.model.Task;
 import ru.quick.approval.system.api.model.UserWithoutPassword;
 import ru.quick.approval.system.dbcontroller.dao.iDao.*;
 import ru.quick.approval.system.dbcontroller.service.iservice.IUserService;
-import ru.quick.approval.system.dbcontroller.translator.RoleTranslator;
-import ru.quick.approval.system.dbcontroller.translator.TaskTranslator;
-import ru.quick.approval.system.dbcontroller.translator.UserTranslator;
-import ru.quick.approval.system.dbcontroller.translator.UserWithoutPasswordTranslator;
+import ru.quick.approval.system.dbcontroller.translator.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +46,8 @@ public class UsersServiceTest {
     private IStatusDao statusDao;
     @Mock
     private IUserRoleDao userRoleDao;
+    @Mock
+    private IProcessDao processDao;
 
     private List<UserRoleRecord> userRoleMockList;
     private List<UserQasRecord> userMockList;
@@ -59,8 +58,8 @@ public class UsersServiceTest {
     @BeforeEach
     public void init() {
         initMocks(this);
-        userService = new UserService(userDao, roleDao, taskDao, statusDao, userRoleDao,
-                new UserTranslator(), new RoleTranslator(), new TaskTranslator(), new UserWithoutPasswordTranslator());
+        userService = new UserService(userDao, roleDao, taskDao, statusDao, userRoleDao, processDao,
+                new UserTranslator(), new RoleTranslator(), new TaskTranslator(), new ProcessTranslator(), new UserWithoutPasswordTranslator());
         userMockList = new ArrayList<>();
         roleMockList = new ArrayList<>();
         taskMockList = new ArrayList<>();
