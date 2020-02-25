@@ -161,10 +161,14 @@ public class ProcessCurator implements IProcessCurator {
         Integer deniedId = statusDao.getStatusByName("Denied").getIdStatus();
         ProcessRecord process = processDao.getProcessById(processId);
         process.setStatusId(deniedId);
+        process.setDateEndFact(Timestamp.valueOf(LocalDateTime.now()));
         processDao.updateProcessById(processId, process);
         List<TaskRecord> tasks = taskDao.getAllTasks();
         for(TaskRecord tmp : tasks) {
             if(tmp.getProcessId().compareTo(processId) == 0) {
+                if(tmp.getStatusId().compareTo(deniedId) != 0) {
+                    tmp.setDateEndFact(Timestamp.valueOf(LocalDateTime.now()));
+                }
                 tmp.setStatusId(deniedId);
                 taskDao.updateTaskById(tmp.getIdTask(), tmp);
             }
@@ -222,7 +226,7 @@ public class ProcessCurator implements IProcessCurator {
 
             // Заполнение запроса на оповещение пользователя
             RestTemplate template = new RestTemplate();
-            //ResponseEntity<Void> responseEntity = template.postForEntity(TASK_INFO_MESSAGE_URL, taskTransferObject, Void.class);
+            ResponseEntity<Void> responseEntity = template.postForEntity(TASK_INFO_MESSAGE_URL, taskTransferObject, Void.class);
         }
     }
 
